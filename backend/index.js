@@ -20,19 +20,20 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.urlencoded({ extended: false }));
+const pool = new pg_1.Client({
+    database: process.env.PGDATABASE,
+    host: process.env.PGHOST,
+    password: process.env.PGPASSWORD,
+    port: parseInt(process.env.PGPORT || '5432', 10),
+    user: process.env.PGUSER,
+});
+pool.connect();
 app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, password } = request.body;
-    const pool = new pg_1.Client({
-        database: process.env.PGDATABASE,
-        host: process.env.PGHOST,
-        password: process.env.PGPASSWORD,
-        port: parseInt(process.env.PGPORT || "5432", 10),
-        user: process.env.PGUSER
-    });
+    const { email, password } = request.body;
+    console.log(email, password);
     try {
-        yield pool.connect();
         const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
-        const values = [username, password];
+        const values = [email, password];
         const result = yield pool.query(query, values);
         console.log(result.rows);
         if (result.rows.length > 0) {
@@ -51,21 +52,18 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
     }
 }));
 app.post('/create', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const pool = new pg_1.Client({
-        database: process.env.PGDATABASE,
-        host: process.env.PGHOST,
-        password: process.env.PGPASSWORD,
-        port: parseInt(process.env.PGPORT || "5432", 10),
-        user: process.env.PGUSER
-    });
     try {
-        yield pool.connect();
         const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
-        const values = [request.body.userName, request.body.email, request.body.password];
-        yield pool.query(query, values)
+        const values = [
+            request.body.userName,
+            request.body.email,
+            request.body.password,
+        ];
+        yield pool
+            .query(query, values)
             .then(() => {
             pool.end();
-            response.send('Konto skapat!');
+            response.status(201).send('Konto skapat!');
         })
             .catch((error) => {
             console.error('Fel vid skapande av konto:', error);
