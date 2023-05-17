@@ -48,10 +48,11 @@ app.post('/create', async (request, response) => {
       request.body.password,
     ];
 
+    console.log(values);
+
     await pool
       .query(query, values)
       .then(() => {
-        pool.end();
         response.status(201).send('Konto skapat!');
       })
       .catch((error: Error) => {

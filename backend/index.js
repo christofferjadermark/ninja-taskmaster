@@ -59,10 +59,10 @@ app.post('/create', (request, response) => __awaiter(void 0, void 0, void 0, fun
             request.body.email,
             request.body.password,
         ];
+        console.log(values);
         yield pool
             .query(query, values)
             .then(() => {
-            pool.end();
             response.status(201).send('Konto skapat!');
         })
             .catch((error) => {
