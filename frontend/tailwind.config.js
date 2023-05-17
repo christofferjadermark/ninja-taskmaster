@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         inter: ["Inter", "sans-serif"],
+        headerFont: ["Julee", "cursive"],
       },
       colors: {
         primary: "#F4F3EE",
