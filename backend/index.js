@@ -17,38 +17,83 @@ const pg_1 = require("pg");
 const cors_1 = __importDefault(require("cors"));
 const express_1 = __importDefault(require("express"));
 dotenv_1.default.config();
-const client = new pg_1.Client({
-    database: process.env.PGDATABASE,
-    host: process.env.PGHOST,
-    password: process.env.PGPASSWORD,
-    port: parseInt(process.env.PGPORT || "5432", 10),
-    user: process.env.PGUSER
-});
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
-app.get('/', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    yield client.connect();
-    console.log("Connected to PostgreSQL database");
-    const result = yield client.query("SELECT * FROM cities");
-    console.log("Query result:", result.rows[0].name);
-    yield client.end();
-    response.send("cities");
+app.use(express_1.default.urlencoded({ extended: false }));
+app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, password } = request.body;
+    const pool = new pg_1.Client({
+        database: process.env.PGDATABASE,
+        host: process.env.PGHOST,
+        password: process.env.PGPASSWORD,
+        port: parseInt(process.env.PGPORT || "5432", 10),
+        user: process.env.PGUSER
+    });
+    try {
+        yield pool.connect();
+        const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
+        const values = [username, password];
+        const result = yield pool.query(query, values);
+        console.log(result.rows);
+        if (result.rows.length > 0) {
+            response.status(200).json({ message: 'Inloggning lyckades!' });
+        }
+        else {
+            response.status(401).json({ message: 'Ogiltiga inloggningsuppgifter.' });
+        }
+    }
+    catch (error) {
+        console.error('Fel vid anslutning:', error);
+        response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+    }
+    finally {
+        pool.end();
+    }
 }));
-// client.connect()
-// async function connectAndQuery() {
-//   try {
-//     await client.connect();
-//     console.log("Connected to PostgreSQL database");
-//     const result = await client.query("SELECT * FROM cities");
-//     console.log("Query result:", result.rows);
-//     await client.end();
-//     console.log("Connection to PostgreSQL database closed");
-//   } catch (error) {
-//     console.error("Error connecting to PostgreSQL database:", error);
-//   }
-// }
+app.post('/create', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const pool = new pg_1.Client({
+        database: process.env.PGDATABASE,
+        host: process.env.PGHOST,
+        password: process.env.PGPASSWORD,
+        port: parseInt(process.env.PGPORT || "5432", 10),
+        user: process.env.PGUSER
+    });
+    try {
+        yield pool.connect();
+        const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
+        const values = [request.body.userName, request.body.email, request.body.password];
+        yield pool.query(query, values)
+            .then(() => {
+            pool.end();
+            response.send('Konto skapat!');
+        })
+            .catch((error) => {
+            console.error('Fel vid skapande av konto:', error);
+            response.status(500).send('Ett fel uppstod vid skapandet av kontot.');
+        });
+    }
+    catch (error) {
+        console.error('Fel vid anslutning:', error);
+        response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+    }
+}));
+// });
 app.listen(8080, () => {
     console.log('Webbtjänsten kan nu ta emot anrop.');
 });
-// const { rows } = await client.query('SELECT * FROM cities')
-// console.log(rows)
+// CREATE TABLE users (
+//   user_id SERIAL PRIMARY KEY,
+//   username VARCHAR(255) NOT NULL,
+//   email VARCHAR(255) NOT NULL,
+//   password VARCHAR(255) NOT NULL
+// );
+// CREATE TABLE activities (
+//   activity_id SERIAL PRIMARY KEY,
+//   user_id INT NOT NULL,
+//   title VARCHAR(255) NOT NULL,
+//   description TEXT,
+//   due_date DATE,
+//   completed BOOLEAN DEFAULT FALSE,
+//   repeat BOOLEAN DEFAULT FALSE,
+//   FOREIGN KEY (user_id) REFERENCES users (user_id)
+// );
