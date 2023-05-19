@@ -27,15 +27,15 @@ app.post('/login', async (request, response) => {
     const result = await pool.query(query, values);
     console.log(result.rows);
     if (result.rows.length > 0) {
+      localStorage.setItem('isLogedIn', 'true');
       response.status(200).json({ message: 'Inloggning lyckades!' });
     } else {
+      localStorage.setItem('isLogedIn', 'false');
       response.status(401).json({ message: 'Ogiltiga inloggningsuppgifter.' });
     }
   } catch (error) {
     console.error('Fel vid anslutning:', error);
     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
-  } finally {
-    pool.end();
   }
 });
 app.post('/create', async (request, response) => {
