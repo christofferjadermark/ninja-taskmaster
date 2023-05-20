@@ -12,21 +12,36 @@ import {
 function Root() {
   return (
     <>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/home">Hem</Link>
-          </li>
-          <li>
-            <Link to="/">Logga in</Link>
-          </li>
-          <li>
-            <button onClick={()=>localStorage.removeItem("user_id")}>Logga ut</button>
-          </li>
-        </ul>
-      </nav>
-      <Outlet />
-    </>
+    <nav className="bg-primary py-4">
+      <ul className="flex justify-center">
+        <li className="mr-4">
+          <Link
+            to="/home"
+            className="text-secondary font-semibold hover:text-gray-200"
+          >
+            Hem
+          </Link>
+        </li>
+        <li className="mr-4">
+          <Link
+            to="/"
+            className="text-secondary font-semibold hover:text-gray-200"
+          >
+            Logga in
+          </Link>
+        </li>
+        <li>
+          <button
+            onClick={() => localStorage.removeItem("user_id")}
+            className="text-secondary font-semibold hover:text-gray-200"
+          >
+            Logga ut
+          </button>
+        </li>
+      </ul>
+    </nav>
+    <Outlet />
+  </>
   )
 }
 

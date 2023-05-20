@@ -28,6 +28,50 @@ const pool = new pg_1.Client({
     user: process.env.PGUSER,
 });
 pool.connect();
+app.get('/:user_id', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    // const test = await pool.query('SELECT * FROM activities WHERE user_id = $1');
+    const query = 'SELECT * FROM activities WHERE user_id = $1';
+    const values = [request.params.user_id];
+    const result = yield pool.query(query, values);
+    console.log(result.rows);
+    response.send(result.rows);
+}));
+app.delete('/delete/:id', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const activity_id = request.params.id;
+    try {
+        const query = 'DELETE FROM activities WHERE activity_id = $1';
+        const values = [activity_id];
+        yield pool.query(query, values);
+        response.status(200).json({ message: 'Objektet har tagits bort' });
+    }
+    catch (error) {
+        console.error('Fel vid borttagning av objektet:', error);
+        response
+            .status(500)
+            .json({ message: 'Ett fel uppstod vid borttagning av objektet' });
+    }
+}));
+app.post('/add', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const { user_id, title, description, date } = request.body;
+    console.log(user_id, title, description, date);
+    try {
+        const query = 'INSERT INTO activities (user_id, title, description, due_date, completed, repeat) VALUES ($1, $2, $3, $4, false, false)';
+        const values = [user_id, title, description, date];
+        yield pool
+            .query(query, values)
+            .then(() => {
+            response.status(201).send('Aktivitet Tillagd!');
+        })
+            .catch((error) => {
+            console.error('Fel vid skapande av konto:', error);
+            response.status(500).send('Ett fel uppstod vid skapandet av kontot.');
+        });
+    }
+    catch (error) {
+        console.error('Fel vid anslutning:', error);
+        response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+    }
+}));
 app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = request.body;
     console.log(request.body + 'body');
@@ -36,14 +80,14 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
         const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
         const values = [email, password];
         const result = yield pool.query(query, values);
+        const test = yield pool.query('SELECT * FROM activities');
+        console.log(test.rows);
         console.log(JSON.stringify(result.rows) + 'Rows');
         if (result.rows.length > 0) {
             console.log(result.rows.length);
-            // localStorage.setItem('isLoggedIn', 'true');
             response.json(result.rows);
         }
         else {
-            // localStorage.setItem('isLoggedIn', 'false');
             response.status(401).json({ message: 'Ogiltiga inloggningsuppgifter.' });
         }
     }
@@ -52,15 +96,13 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
         response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
     }
 }));
-app.post('/create', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+const parseUrlEncodedMiddleware = express_1.default.urlencoded({ extended: false });
+app.post('/create', parseUrlEncodedMiddleware, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userName, email, password } = request.body;
     try {
         const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
-        const values = [
-            request.body.userName,
-            request.body.email,
-            request.body.password,
-        ];
-        console.log(values + '53 ');
+        const values = [userName, email, password];
+        console.log(userName + '53 ');
         yield pool
             .query(query, values)
             .then(() => {
