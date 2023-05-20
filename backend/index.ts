@@ -6,7 +6,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 const pool = new Client({
   database: process.env.PGDATABASE,
@@ -20,17 +20,20 @@ pool.connect();
 
 app.post('/login', async (request, response) => {
   const { email, password } = request.body;
-  console.log(email, password);
+  console.log(request.body + 'body');
+
+  console.log(email, password + 'jjj');
   try {
     const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
     const values = [email, password];
     const result = await pool.query(query, values);
-    console.log(result.rows);
+    console.log(JSON.stringify(result.rows) + 'Rows');
     if (result.rows.length > 0) {
-      localStorage.setItem('isLogedIn', 'true');
-      response.status(200).json({ message: 'Inloggning lyckades!' });
+      console.log(result.rows.length);
+      // localStorage.setItem('isLoggedIn', 'true');
+      response.json(result.rows);
     } else {
-      localStorage.setItem('isLogedIn', 'false');
+      // localStorage.setItem('isLoggedIn', 'false');
       response.status(401).json({ message: 'Ogiltiga inloggningsuppgifter.' });
     }
   } catch (error) {
@@ -48,7 +51,7 @@ app.post('/create', async (request, response) => {
       request.body.password,
     ];
 
-    console.log(values);
+    console.log(values + '53 ');
 
     await pool
       .query(query, values)

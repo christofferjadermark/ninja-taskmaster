@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./App.css";
 import "./index.css";
@@ -19,9 +19,39 @@ function App() {
   const [password, setPassword] = useState("");
   const [logInEmail, setLogInEmail] = useState("");
   const [logInPassword, setLogInPassword] = useState("");
+  useEffect(() => {
+    if(localStorage.getItem("user_id")){
+      redirectToHome()
+    }
+  } )
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: logInEmail,
+          password: logInPassword,
+        }),
+      });
+      console.log(response)
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        const { user_id } = data[0];
+        localStorage.setItem('user_id', user_id);
+        redirectToHome();
+      } else {
+        console.log("fel inloggnings uppgifter")
+      }
+    } catch (error) {
+      console.log("fel")
+      // Handle ne twork or server error
+    }
   };
   if (localStorage.getItem("isLogedIn") && localStorage.getItem("isLogedIn") === "true"){
     redirectToHome();
@@ -32,9 +62,9 @@ function App() {
       <h1>Logga in</h1>
       <form
         className="md:container sm:mx-auto"
-        action="http://localhost:8080/login"
-        method="post"
-        // onSubmit={handleSubmit}
+        // action="http://localhost:8080/login"
+        // method="post"
+        onSubmit={handleSubmit}
       >
         <label>
           <input

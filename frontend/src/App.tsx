@@ -20,7 +20,9 @@ function Root() {
           <li>
             <Link to="/">Logga in</Link>
           </li>
-
+          <li>
+            <button onClick={()=>localStorage.removeItem("user_id")}>Logga ut</button>
+          </li>
         </ul>
       </nav>
       <Outlet />
