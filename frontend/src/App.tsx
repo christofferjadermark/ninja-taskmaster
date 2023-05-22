@@ -1,6 +1,6 @@
 import Login from "./Login";
 import Home from "./Home";
-import Landing from "./pages/Landing";
+import SignUp from "./singUp";
 
 // createBrowserRouter
 import {
@@ -31,6 +31,14 @@ function Root() {
               Logga in
             </Link>
           </li>
+          <li className="mr-4">
+            <Link
+              to="/signUp"
+              className="font-semibold text-secondary hover:text-gray-200"
+            >
+              Skapa Konto
+            </Link>
+          </li>
           <li>
             <button
               onClick={() => localStorage.removeItem("user_id")}
@@ -38,14 +46,6 @@ function Root() {
             >
               Logga ut
             </button>
-          </li>
-          <li>
-            <Link
-              to="/landing"
-              className="font-semibold text-secondary hover:text-gray-200"
-            >
-              Landing
-            </Link>
           </li>
         </ul>
       </nav>
@@ -59,8 +59,8 @@ function App() {
     {
       children: [
         { element: <Home />, path: "/home" },
+        { element: <SignUp />, path: "/signUp" },
         { element: <Login />, path: "/" },
-        { element: <Landing />, path: "/landing" },
       ],
       element: <Root />,
     },
