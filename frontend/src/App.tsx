@@ -1,6 +1,7 @@
 import Login from "./Login";
 import Home from "./Home";
 import SignUp from "./singUp";
+import Landing from "./pages/Landing";
 
 // createBrowserRouter
 import {
@@ -61,6 +62,7 @@ function App() {
         { element: <Home />, path: "/home" },
         { element: <SignUp />, path: "/signUp" },
         { element: <Login />, path: "/" },
+        { element: <Landing />, path: "/landing" },
       ],
       element: <Root />,
     },
