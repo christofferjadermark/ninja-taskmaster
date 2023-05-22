@@ -40,6 +40,7 @@ app.delete('/delete/:id', async (request, response) => {
       .json({ message: 'Ett fel uppstod vid borttagning av objektet' });
   }
 });
+
 app.post('/add', async (request, response) => {
   const { user_id, title, description, date } = request.body;
   console.log(user_id, title, description, date);
@@ -62,6 +63,36 @@ app.post('/add', async (request, response) => {
     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
   }
 });
+
+// Christoffers kod för att uppdatera aktivitet, fungerar inte än
+
+// app.patch('/update', async (request, response) => {
+//   const { activity_id, title, description, date } = request.body;
+//   console.log(activity_id, title, description, date);
+//   const user = 'SELECT * FROM users WHERE user_id = $1'
+
+//   try {
+//     const query =
+//       'UPDATE activities SET title = $1, description = $2, due_date = $3 WHERE activity_id = $4';
+//     const values = [title, description, date, activity_id];
+
+//     await pool
+//       .query(query, values)
+//       .then(() => {
+//         response.status(201).send('Aktivitet Uppdaterad!');
+//       })
+//       .catch((error: Error) => {
+//         console.error('Fel vid skapande av konto:', error);
+//         response
+//           .status(500)
+//           .send('Ett fel uppstod vid uppdatering av aktiviteten.');
+//       });
+//   } catch (error) {
+//     console.error('Fel vid anslutning:', error);
+//     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+//   }
+// });
+
 app.post('/login', async (request, response) => {
   const { email, password } = request.body;
   console.log(request.body + 'body');
