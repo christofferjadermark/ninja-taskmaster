@@ -64,6 +64,80 @@ app.post('/add', async (request, response) => {
   }
 });
 
+// Add a new task
+app.post('/api/tasks', async (req, res) => {
+  const { description, dueDate } = req.body;
+
+  try {
+    const insertTaskQuery = 'INSERT INTO tasks (description, due_date) VALUES ($1, $2) RETURNING *';
+    const result = await pool.query(insertTaskQuery, [description, dueDate]);
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Failed to create task:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Get all tasks
+app.get('/api/tasks', async (_, res) => {
+  try {
+    const getAllTasksQuery = 'SELECT * FROM tasks';
+    const result = await pool.query(getAllTasksQuery);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Failed to retrieve tasks:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Get a single task by ID
+app.get('/api/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const getTaskByIdQuery = 'SELECT * FROM tasks WHERE id = $1';
+    const result = await pool.query(getTaskByIdQuery, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('Failed to retrieve task:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Update a task by ID
+app.put('/api/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+  const { description, dueDate } = req.body;
+
+  try {
+    const updateTaskQuery = 'UPDATE tasks SET description = $1, due_date = $2 WHERE id = $3';
+    await pool.query(updateTaskQuery, [description, dueDate, id]);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Failed to update task:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Delete a task by ID
+app.delete('/api/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deleteTaskQuery = 'DELETE FROM tasks WHERE id = $1';
+    await pool.query(deleteTaskQuery, [id]);
+    res.sendStatus(204);
+  } catch (error) {
+    console.error('Failed to delete task:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 // Christoffers kod för att uppdatera aktivitet, fungerar inte än
 
 // app.patch('/update', async (request, response) => {
