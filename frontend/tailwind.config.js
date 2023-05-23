@@ -12,6 +12,7 @@ module.exports = {
         secondary: "#017A5D",
         linear1: "rgba(77, 106, 109, 1)",
         linear2: "rgba(1, 130, 94, 1)",
+        email: "#6757C8",
       },
     },
   },
