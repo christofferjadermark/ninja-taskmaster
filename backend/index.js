@@ -72,6 +72,99 @@ app.post('/add', (request, response) => __awaiter(void 0, void 0, void 0, functi
         response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
     }
 }));
+// Add a new task
+app.post('/api/tasks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { description, dueDate } = req.body;
+    try {
+        const insertTaskQuery = 'INSERT INTO tasks (description, due_date) VALUES ($1, $2) RETURNING *';
+        const result = yield pool.query(insertTaskQuery, [description, dueDate]);
+        res.status(201).json(result.rows[0]);
+    }
+    catch (error) {
+        console.error('Failed to create task:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}));
+// Get all tasks
+app.get('/api/tasks', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const getAllTasksQuery = 'SELECT * FROM tasks';
+        const result = yield pool.query(getAllTasksQuery);
+        res.status(200).json(result.rows);
+    }
+    catch (error) {
+        console.error('Failed to retrieve tasks:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}));
+// Get a single task by ID
+app.get('/api/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const getTaskByIdQuery = 'SELECT * FROM tasks WHERE id = $1';
+        const result = yield pool.query(getTaskByIdQuery, [id]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+        res.status(200).json(result.rows[0]);
+    }
+    catch (error) {
+        console.error('Failed to retrieve task:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}));
+// Update a task by ID
+app.put('/api/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const { description, dueDate } = req.body;
+    try {
+        const updateTaskQuery = 'UPDATE tasks SET description = $1, due_date = $2 WHERE id = $3';
+        yield pool.query(updateTaskQuery, [description, dueDate, id]);
+        res.sendStatus(200);
+    }
+    catch (error) {
+        console.error('Failed to update task:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}));
+// Delete a task by ID
+app.delete('/api/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const deleteTaskQuery = 'DELETE FROM tasks WHERE id = $1';
+        yield pool.query(deleteTaskQuery, [id]);
+        res.sendStatus(204);
+    }
+    catch (error) {
+        console.error('Failed to delete task:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+}));
+// Christoffers kod för att uppdatera aktivitet, fungerar inte än
+// app.patch('/update', async (request, response) => {
+//   const { activity_id, title, description, date } = request.body;
+//   console.log(activity_id, title, description, date);
+//   const user = 'SELECT * FROM users WHERE user_id = $1'
+//   try {
+//     const query =
+//       'UPDATE activities SET title = $1, description = $2, due_date = $3 WHERE activity_id = $4';
+//     const values = [title, description, date, activity_id];
+//     await pool
+//       .query(query, values)
+//       .then(() => {
+//         response.status(201).send('Aktivitet Uppdaterad!');
+//       })
+//       .catch((error: Error) => {
+//         console.error('Fel vid skapande av konto:', error);
+//         response
+//           .status(500)
+//           .send('Ett fel uppstod vid uppdatering av aktiviteten.');
+//       });
+//   } catch (error) {
+//     console.error('Fel vid anslutning:', error);
+//     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+//   }
+// });
 app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = request.body;
     console.log(request.body + 'body');
