@@ -1,8 +1,8 @@
-import React from "react";
-import { useState, useEffect, FormEvent } from "react";
+import React from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import signUpNinja from "../images/signUp.svg"
-import "../index.css";
+import signUpNinja from '../images/signUp.svg';
+import '../index.css';
 
 function useRedirect() {
   const navigate = useNavigate();
@@ -14,19 +14,22 @@ function useRedirect() {
 
 function App() {
   const redirectToHome = useRedirect();
-  const [userName, setUserName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userName, setUserName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
-    if(localStorage.getItem("user_id")){
-      redirectToHome()
+    if (localStorage.getItem('user_id')) {
+      redirectToHome();
     }
-  })
+  });
 
-  if (localStorage.getItem("isLogedIn") && localStorage.getItem("isLogedIn") === "true"){
+  if (
+    localStorage.getItem('isLogedIn') &&
+    localStorage.getItem('isLogedIn') === 'true'
+  ) {
     redirectToHome();
   }
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -42,68 +45,77 @@ function App() {
           password: password,
         }),
       });
-      console.log(response)
+      console.log(response);
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         const { user_id } = data[0];
         localStorage.setItem('user_id', user_id);
         redirectToHome();
       } else {
-        console.log("fel inloggnings uppgifter")
+        console.log('fel inloggnings uppgifter');
       }
     } catch (error) {
-      console.log("fel")
+      console.log('fel');
     }
   };
   return (
-<div className="flex justify-center items-center">
-  <div className="max-w-md w-[65%]">
-    <div className="text-[30px] text-center"> The power to slay your tasks, all in one app.</div>
+    <div className="flex items-center justify-center">
+      <div className="w-[65%] max-w-md">
+        <div className="text-center text-[30px]">
+          {' '}
+          The power to slay your tasks, all in one app.
+        </div>
 
-    <img src={signUpNinja} alt="Ninja Taskmaster" className="my-[30px] w-full"/>
-    <form
-      className="md:container sm:mx-auto"
-        onSubmit={handleSubmit}
-    >
-      <h2>Enter email address</h2>
-      <label>
-        <input
-          className="border-2 border-secondary rounded-[25px] px-[32px] py-[8px] my-[13px] placeholder-italic w-full"
-          style={{ fontStyle: "italic" }}
-          name="email"
-          placeholder="Example@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+        <img
+          src={signUpNinja}
+          alt="Ninja Taskmaster"
+          className="my-[30px] w-full"
         />
-      </label>
-      <label>
-        <h2>Enter password</h2>
-        <input
-          name="password"
-          placeholder="Example1"
-          type="password"
-          value={password}
-          className="border-2 border-secondary rounded-[25px] px-[32px] py-[8px] my-[13px] placeholder-italic w-full"
-          style={{ fontStyle: "italic" }}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </label>
+        <form className="md:container sm:mx-auto" onSubmit={handleSubmit}>
+          <h2>Enter email address</h2>
+          <label>
+            <input
+              className="placeholder-italic my-[13px] w-full rounded-[25px] border-2 border-secondary px-[32px] py-[8px]"
+              style={{ fontStyle: 'italic' }}
+              name="email"
+              placeholder="Example@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
+          <label>
+            <h2>Enter password</h2>
+            <input
+              name="password"
+              placeholder="Example1"
+              type="password"
+              value={password}
+              className="placeholder-italic my-[13px] w-full rounded-[25px] border-2 border-secondary px-[32px] py-[8px]"
+              style={{ fontStyle: 'italic' }}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
 
-      <div className="text-center">
-        <input
-          type="submit"
-          className="btn bg-secondary text-white cursor-pointer border-2 border-none rounded-[25px] px-[33px] py-[15px] my-[54px]"
-          value="Sign in"
-        />
-        <div className="text-[#6757C8] font-light cursor-pointer">Forgot your password?</div>
-        <div className="font-light my-3">Do you want to create an account?</div>
-        <a href="/#/signUp" className="text-[#6757C8] font-light ">Sign up here!</a>
+          <div className="text-center">
+            <input
+              type="submit"
+              className="btn my-[54px] cursor-pointer rounded-[25px] border-2 border-none bg-secondary px-[33px] py-[15px] text-white"
+              value="Sign in"
+            />
+            <div className="cursor-pointer font-light text-[#6757C8]">
+              Forgot your password?
+            </div>
+            <div className="my-3 font-light">
+              Do you want to create an account?
+            </div>
+            <a href="/#/signUp" className="font-light text-[#6757C8] ">
+              Sign up here!
+            </a>
+          </div>
+        </form>
       </div>
-
-    </form>
-  </div>
-</div>
+    </div>
   );
 }
 

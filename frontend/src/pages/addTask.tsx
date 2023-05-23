@@ -1,21 +1,25 @@
-import { useState, useEffect, FormEvent, ChangeEvent } from "react";
-import closeSvg from "../images/close.svg"
-import burger from "../images/addTaskBurger.svg"
-import arrow from "../images/arrow.svg"
-import clock from "../images/clock.svg"
-import repeat from "../images/repeat.svg"
-import calender from "../images/calender.svg"
-import pen from "../images/pen.svg"
+import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
+import closeSvg from '../images/close.svg';
+import burger from '../images/addTaskBurger.svg';
+import arrow from '../images/arrow.svg';
+import clock from '../images/clock.svg';
+import repeat from '../images/repeat.svg';
+import calender from '../images/calender.svg';
+import pen from '../images/pen.svg';
+import flag from '../images/flag.svg';
 function App() {
   const [data, setData] = useState([]);
-  const [hour, setHour] = useState("");
-  const [minute, setMinute] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [hour, setHour] = useState('');
+  const [minute, setMinute] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [categoryIsOpen, setCategoryIsOpen] = useState(false);
+
   useEffect(() => {
-    if (localStorage.getItem("user_id")) {
-      fetch("http://localhost:8080/" + localStorage.getItem("user_id"))
+    if (localStorage.getItem('user_id')) {
+      fetch('http://localhost:8080/' + localStorage.getItem('user_id'))
         .then((response) => response.json())
         .then((result) => {
           setData(result);
@@ -24,16 +28,23 @@ function App() {
         .catch((error) => console.error(error));
     }
   }, []);
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+  };
+  const handleCategoryClick = () => {
+    setCategoryIsOpen(!categoryIsOpen);
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/add", {
-        method: "POST",
+      const response = await fetch('http://localhost:8080/add', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: localStorage.getItem("user_id"),
+          user_id: localStorage.getItem('user_id'),
           title: title,
           description: description,
           date: date,
@@ -41,12 +52,12 @@ function App() {
       });
       console.log(response);
       if (response.ok) {
-        console.log("Tillagd");
+        console.log('Tillagd');
       } else {
-        console.log("Inte tillagd");
+        console.log('Inte tillagd');
       }
     } catch (error) {
-      console.log("fel");
+      console.log('fel');
     }
   };
   const handleHourChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +65,9 @@ function App() {
 
     if (/^\d{0,2}$/.test(value)) {
       const parsedValue = parseInt(value, 10);
-      const sanitizedValue = isNaN(parsedValue) ? '' : Math.min(parsedValue, 23).toString();
+      const sanitizedValue = isNaN(parsedValue)
+        ? ''
+        : Math.min(parsedValue, 23).toString();
       setHour(sanitizedValue);
     }
   };
@@ -63,53 +76,56 @@ function App() {
 
     if (/^\d{0,2}$/.test(value)) {
       const parsedValue = parseInt(value, 10);
-      const sanitizedValue = isNaN(parsedValue) ? '' : Math.min(parsedValue, 59).toString();
+      const sanitizedValue = isNaN(parsedValue)
+        ? ''
+        : Math.min(parsedValue, 59).toString();
       setMinute(sanitizedValue);
     }
   };
   const handleDelete = (activity: number) => {
-    fetch("http://localhost:8080/delete/" + activity, {
-      method: "DELETE",
+    fetch('http://localhost:8080/delete/' + activity, {
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then((response) => response.json())
       .then((data: any) => {
-        console.log("Objektet har tagits bort:", data);
+        console.log('Objektet har tagits bort:', data);
       })
       .catch((error: Error) => {
-        console.error("Fel vid borttagning av objektet:", error);
+        console.error('Fel vid borttagning av objektet:', error);
       });
   };
 
   return (
     <div>
-      <div className="h-[100px] flex">
-      <img src={closeSvg} alt="Close" className=" py-6 ml-auto " />
+      <div className="flex h-[100px]">
+        <img src={closeSvg} alt="Close" className=" ml-auto py-6 " />
       </div>
       <form
         className="mx-auto max-w-md rounded-md text-[20px] "
         onSubmit={handleSubmit}
       >
-      <div className="h-[60px] bg-gradient-to-b from-linear1 to-linear2  flex">
-        <input
-         className="text-white text-[30px] my-auto ml-[33px] bg-transparent placeholder:text-white w-full focus:outline-none"
-         type="text"
-         id="title"
-         placeholder="Add title"
-         value={title}
-         onChange={(e) => setTitle(e.target.value)}/>
-         <div className="ml-auto my-auto mr-[50px]">
+        <div className="flex h-[60px] bg-gradient-to-b from-linear1  to-linear2">
+          <input
+            className="my-auto ml-[33px] w-full bg-transparent text-[30px] text-white placeholder:text-white focus:outline-none"
+            type="text"
+            id="title"
+            placeholder="Add title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <div className="my-auto ml-auto mr-[50px]">
             <img src={pen} className="h-[35px]" alt="" />
           </div>
         </div>
-        <div className="flex ml-[33px] mt-[34px]">
+        <div className="ml-[33px] mt-[34px] flex">
           <div className="my-auto mr-[10px]">Time</div>
           <input
             type="text"
             id="hour"
-            className="text-primary rounded-[25px] border-[3px] border-secondary w-[65px] maxlength-2 bg-transparent px-4 py-2"
+            className="text-primary maxlength-2 w-[65px] rounded-[25px] border-[3px] border-secondary bg-transparent px-4 py-2"
             placeholder="07"
             value={hour}
             onChange={handleHourChange}
@@ -117,47 +133,85 @@ function App() {
           <input
             type="text"
             id="minute"
-            className="text-primary rounded-[25px] border-[3px] border-secondary w-[65px] bg-transparent px-4 py-2"
+            className="text-primary w-[65px] rounded-[25px] border-[3px] border-secondary bg-transparent px-4 py-2"
             placeholder="00"
             value={minute}
             onChange={handleMinuteChange}
           />
         </div>
-        <div className="flex ml-[33px] mt-[34px] w-[80%]">
+        <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
+        <div className="ml-[33px] mt-[20px] flex w-[80%]" onClick={handleClick}>
           <img src={burger} alt="" />
-          <div className="text-[16px] ml-[9px]">Add information</div>
+          <div className="ml-[9px] text-[16px]">Add information</div>
           <div className="ml-auto">
             <img src={arrow} alt="" />
           </div>
         </div>
-        <div className="flex ml-[33px] mt-[34px] w-[80%]">
+        <div
+          className={` ${
+            isOpen ? 'h-[200px] opacity-100' : ' invisible h-[0px] opacity-0'
+          } overflow-hidden transition-all duration-500 ease-in-out `}
+        >
+          <textarea
+            placeholder="Write hear..."
+            className=" ml-[33px] mt-[20px] h-[180px] w-[80%] resize-none rounded-[25px] border-[1px] border-secondary px-2 py-1 pl-[33px] text-gray-800 placeholder:text-[16px] focus:outline-none"
+          ></textarea>{' '}
+        </div>
+        <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
+        <div
+          className="ml-[33px] mt-[20px] flex w-[80%]"
+          onClick={handleCategoryClick}
+        >
           <img src={burger} alt="" />
-          <div className="text-[16px] ml-[9px]">Category</div>
+          <div className="ml-[9px] text-[16px]">Category</div>
           <div className="ml-auto">
             <img src={arrow} alt="" />
           </div>
         </div>
-        <div className="flex ml-[33px] mt-[34px] w-[80%]">
+        <div
+          className={` ${
+            categoryIsOpen
+              ? 'h-[200px] opacity-100'
+              : ' invisible h-[0px] opacity-0'
+          } overflow-hidden transition-all duration-500 ease-in-out `}
+        >
+          <textarea
+            placeholder="Write hear..."
+            className=" ml-[33px] mt-[20px] h-[180px] w-[80%] resize-none rounded-[25px] border-[1px] border-secondary px-2 py-1 pl-[33px] text-gray-800 placeholder:text-[16px] focus:outline-none"
+          ></textarea>{' '}
+        </div>
+        <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
+        <div className="ml-[33px] mt-[20px] flex w-[80%]">
           <img src={clock} alt="" />
-          <div className="text-[16px] ml-[9px]">All day</div>
+          <div className="ml-[9px] text-[16px]">All day</div>
           <div className="ml-auto">
             <img src={arrow} alt="" />
           </div>
         </div>
-        <div className="flex ml-[33px] mt-[34px] w-[80%]">
+        <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
+        <div className="ml-[33px] mt-[20px] flex w-[80%]">
           <img src={calender} alt="" />
-          <div className="text-[16px] ml-[9px]">Mon, 4 November 2024</div>
+          <div className="ml-[9px] text-[16px]">Mon, 4 November 2024</div>
           <div className="ml-auto">
             <img src={arrow} alt="" />
           </div>
         </div>
-        <div className="flex ml-[33px] mt-[34px] w-[80%]">
+        <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
+        <div className="ml-[33px] mt-[20px] flex w-[80%]">
           <img src={repeat} alt="" />
-          <div className="text-[16px] ml-[9px]">Does not repeat</div>
+          <div className="ml-[9px] text-[16px]">Does not repeat</div>
           <div className="ml-auto">
-            <img src={arrow} alt="" />
+            <img src={arrow} alt="Arrow" />
           </div>
         </div>
+        <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
+        <button className="ml-[33px] mt-[20px] flex items-center rounded-[25px] border-[1px] border-secondary px-4 py-2">
+          <img src={flag} alt="Flag" className="mr-2 h-4 w-4" />
+          <span className="text-primary">Add priority</span>
+        </button>
+        <button className="ml-auto mr-[50px] mt-[20px] flex items-center rounded-[25px] bg-secondary px-6 py-2 text-white">
+          <span className="text-primary">Save</span>
+        </button>
         {/* <div className="mb-4">
           <label htmlFor="title" className="block text-gray-700">
             Title
@@ -204,7 +258,6 @@ function App() {
           Skicka
         </button> */}
       </form>
-
     </div>
   );
 }
