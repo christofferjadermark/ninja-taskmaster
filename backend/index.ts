@@ -69,7 +69,8 @@ app.post('/api/tasks', async (req, res) => {
   const { description, dueDate } = req.body;
 
   try {
-    const insertTaskQuery = 'INSERT INTO tasks (description, due_date) VALUES ($1, $2) RETURNING *';
+    const insertTaskQuery =
+      'INSERT INTO tasks (description, due_date) VALUES ($1, $2) RETURNING *';
     const result = await pool.query(insertTaskQuery, [description, dueDate]);
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -115,7 +116,8 @@ app.put('/api/tasks/:id', async (req, res) => {
   const { description, dueDate } = req.body;
 
   try {
-    const updateTaskQuery = 'UPDATE tasks SET description = $1, due_date = $2 WHERE id = $3';
+    const updateTaskQuery =
+      'UPDATE tasks SET description = $1, due_date = $2 WHERE id = $3';
     await pool.query(updateTaskQuery, [description, dueDate, id]);
     res.sendStatus(200);
   } catch (error) {
@@ -176,8 +178,8 @@ app.post('/login', async (request, response) => {
     const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
     const values = [email, password];
     const result = await pool.query(query, values);
-    const test = await pool.query('SELECT * FROM activities');
-    console.log(test.rows);
+    // const test = await pool.query('SELECT * FROM activities');
+    // console.log(test.rows);
     console.log(JSON.stringify(result.rows) + 'Rows');
     if (result.rows.length > 0) {
       console.log(result.rows.length);
@@ -193,6 +195,7 @@ app.post('/login', async (request, response) => {
 const parseUrlEncodedMiddleware = express.urlencoded({ extended: false });
 app.post('/create', parseUrlEncodedMiddleware, async (request, response) => {
   const { userName, email, password } = request.body;
+  console.log(userName, email, password);
   try {
     const query =
       'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';

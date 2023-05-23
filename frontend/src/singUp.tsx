@@ -34,7 +34,7 @@ function App() {
   return (
 <div className="flex justify-center items-center">
   <div className="max-w-md w-[65%]">
-    <img src={signUpNinja} alt="Ninja Taskmaster" className="my-[30px]"/>
+    <img src={signUpNinja} alt="Ninja Taskmaster" className="my-[30px] w-full"/>
     <form
       className="mx-auto "
       action="http://localhost:8080/create"
@@ -67,7 +67,7 @@ function App() {
         <input
           className="border-2 border-secondary rounded-[25px] px-[32px] py-[8px] my-[13px] placeholder-italic w-full"
           style={{ fontStyle: "italic" }}
-          name="email"
+          name="phoneNumber"
           placeholder="0000-000000"
           value={phoneNumber}
           onChange={(e) => setPhoneNumber(e.target.value)}
@@ -88,7 +88,7 @@ function App() {
       <label>
         <h2>Confirm password</h2>
         <input
-          name="password"
+          name="confirmPassword"
           placeholder="Example1"
           type="password"
           value={confirmPassword}

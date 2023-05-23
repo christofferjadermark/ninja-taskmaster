@@ -173,8 +173,8 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
         const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
         const values = [email, password];
         const result = yield pool.query(query, values);
-        const test = yield pool.query('SELECT * FROM activities');
-        console.log(test.rows);
+        // const test = await pool.query('SELECT * FROM activities');
+        // console.log(test.rows);
         console.log(JSON.stringify(result.rows) + 'Rows');
         if (result.rows.length > 0) {
             console.log(result.rows.length);
@@ -192,6 +192,7 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
 const parseUrlEncodedMiddleware = express_1.default.urlencoded({ extended: false });
 app.post('/create', parseUrlEncodedMiddleware, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { userName, email, password } = request.body;
+    console.log(userName, email, password);
     try {
         const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
         const values = [userName, email, password];
