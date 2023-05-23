@@ -167,7 +167,7 @@ function App() {
         </button> */}
       </form>
 
-      <Button />
+      <Button value={"Sign up"} />
     </div>
   );
 }

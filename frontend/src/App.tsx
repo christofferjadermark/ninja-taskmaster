@@ -48,6 +48,14 @@ function Root() {
               Logga ut
             </button>
           </li>
+          <li className="mr-4">
+            <Link
+              to="/Landing"
+              className="font-semibold text-secondary hover:text-gray-200"
+            >
+              Landing
+            </Link>
+          </li>
         </ul>
       </nav>
       <Outlet />
