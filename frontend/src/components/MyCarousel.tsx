@@ -43,7 +43,7 @@ function MyCarousel() {
           <div className="carousel-text mt-6 font-inter text-3xl font-medium text-black">
             Slay Your Task
           </div>
-          <div className="max-w-[322px] font-inter text-base font-semibold text-primaryfont">
+          <div className="max-w-[322px] font-inter text-base font-medium text-primaryfont">
             Gather all your daily tasks in one place like millions of others and
             save your precious time
           </div>
@@ -53,7 +53,7 @@ function MyCarousel() {
           <div className="carousel-text mt-6 font-inter text-3xl font-medium text-black">
             Save Time
           </div>
-          <div className="max-w-[322px] font-inter text-base font-semibold text-primaryfont">
+          <div className="max-w-[322px] font-inter text-base font-medium text-primaryfont">
             Gather all your daily tasks in one place like millions of others and
             save your precious time
           </div>
@@ -63,7 +63,7 @@ function MyCarousel() {
           <div className="carousel-text mt-6 font-inter text-3xl font-medium text-black">
             Save Time
           </div>
-          <div className="max-w-[322px] font-inter text-base font-semibold text-primaryfont">
+          <div className="max-w-[322px] font-inter text-base font-medium text-primaryfont">
             Gather all your daily tasks in one place like millions of others and
             save your precious time
           </div>
