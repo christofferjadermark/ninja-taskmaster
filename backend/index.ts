@@ -42,12 +42,12 @@ app.delete('/delete/:id', async (request, response) => {
 });
 
 app.post('/add', async (request, response) => {
-  const { user_id, title, description, date } = request.body;
-  console.log(user_id, title, description, date);
+  const { user_id, title, description, date, category } = request.body;
+  console.log(user_id, title, description, date, category);
   try {
     const query =
-      'INSERT INTO activities (user_id, title, description, due_date, completed, repeat) VALUES ($1, $2, $3, $4, false, false)';
-    const values = [user_id, title, description, date];
+      'INSERT INTO activities (user_id, title, description, due_date, completed, repeat, category) VALUES ($1, $2, $3, $4, false, false, $5)';
+    const values = [user_id, title, description, date, category];
 
     await pool
       .query(query, values)

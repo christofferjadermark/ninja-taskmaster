@@ -1,20 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*{html,js,jsx,ts,tsx,}"],
+  content: [
+    './src/**/*{html,js,jsx,ts,tsx,}',
+    './node_modules/flowbite/**/*.js',
+  ],
   theme: {
     extend: {
       fontFamily: {
-        inter: ["Inter", "sans-serif"],
-        header: ["Julee", "cursive"],
+        inter: ['Inter', 'sans-serif'],
+        header: ['Julee', 'cursive'],
       },
       colors: {
-        primaryfont: "#898989",
-        secondary: "#017A5D",
-        linear1: "rgba(77, 106, 109, 1)",
-        linear2: "rgba(1, 130, 94, 1)",
-        email: "#6757C8",
+        primaryfont: '#898989',
+        secondary: '#017A5D',
+        linear1: 'rgba(77, 106, 109, 1)',
+        linear2: 'rgba(1, 130, 94, 1)',
       },
     },
   },
-  plugins: [],
+  plugins: [require('flowbite/plugin')],
 };

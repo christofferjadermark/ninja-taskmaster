@@ -7,27 +7,29 @@ import repeat from '../images/repeat.svg';
 import calender from '../images/calender.svg';
 import pen from '../images/pen.svg';
 import flag from '../images/flag.svg';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 function App() {
-  const [data, setData] = useState([]);
   const [hour, setHour] = useState('');
   const [minute, setMinute] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [categoryIsOpen, setCategoryIsOpen] = useState(false);
-
+  const [category, setCategory] = useState('#ffffff');
+  const [categoryStyle, setCategoryStyle] = useState(
+    'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
+      category +
+      ']'
+  );
   useEffect(() => {
-    if (localStorage.getItem('user_id')) {
-      fetch('http://localhost:8080/' + localStorage.getItem('user_id'))
-        .then((response) => response.json())
-        .then((result) => {
-          setData(result);
-          console.log(result);
-        })
-        .catch((error) => console.error(error));
-    }
-  }, []);
+    setCategoryStyle(
+      'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
+        category +
+        ']'
+    );
+  }, [category]);
+
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
@@ -47,7 +49,8 @@ function App() {
           user_id: localStorage.getItem('user_id'),
           title: title,
           description: description,
-          date: date,
+          date: selectedDate,
+          category: category,
         }),
       });
       console.log(response);
@@ -82,22 +85,16 @@ function App() {
       setMinute(sanitizedValue);
     }
   };
-  const handleDelete = (activity: number) => {
-    fetch('http://localhost:8080/delete/' + activity, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((data: any) => {
-        console.log('Objektet har tagits bort:', data);
-      })
-      .catch((error: Error) => {
-        console.error('Fel vid borttagning av objektet:', error);
-      });
-  };
 
+  const [isOn, setIsOn] = useState(false);
+
+  const handleToggle = () => {
+    setIsOn(!isOn);
+  };
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+  };
   return (
     <div>
       <div className="flex h-[100px]">
@@ -153,17 +150,19 @@ function App() {
           } overflow-hidden transition-all duration-500 ease-in-out `}
         >
           <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Write hear..."
             className=" ml-[33px] mt-[20px] h-[180px] w-[80%] resize-none rounded-[25px] border-[1px] border-secondary px-2 py-1 pl-[33px] text-gray-800 placeholder:text-[16px] focus:outline-none"
-          ></textarea>{' '}
+          ></textarea>
         </div>
         <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
         <div
           className="ml-[33px] mt-[20px] flex w-[80%]"
           onClick={handleCategoryClick}
         >
-          <img src={burger} alt="" />
-          <div className="ml-[9px] text-[16px]">Category</div>
+          <div className={categoryStyle}></div>
+          <div className=" ml-[9px] text-[16px]">Category</div>
           <div className="ml-auto">
             <img src={arrow} alt="" />
           </div>
@@ -171,29 +170,67 @@ function App() {
         <div
           className={` ${
             categoryIsOpen
-              ? 'h-[200px] opacity-100'
+              ? 'h-[170px] opacity-100'
               : ' invisible h-[0px] opacity-0'
           } overflow-hidden transition-all duration-500 ease-in-out `}
         >
-          <textarea
-            placeholder="Write hear..."
-            className=" ml-[33px] mt-[20px] h-[180px] w-[80%] resize-none rounded-[25px] border-[1px] border-secondary px-2 py-1 pl-[33px] text-gray-800 placeholder:text-[16px] focus:outline-none"
-          ></textarea>{' '}
-        </div>
-        <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
-        <div className="ml-[33px] mt-[20px] flex w-[80%]">
-          <img src={clock} alt="" />
-          <div className="ml-[9px] text-[16px]">All day</div>
-          <div className="ml-auto">
-            <img src={arrow} alt="" />
+          <div
+            className="mt-[30px] flex cursor-pointer"
+            onClick={() => setCategory('#F17B25')}
+          >
+            <div className="ml-[33px] h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[#F17B25] "></div>
+            <div className="my-auto ml-[10px] text-[16px]">Work</div>
+          </div>
+          <div
+            className="mt-[10px] flex cursor-pointer"
+            onClick={() => setCategory('#A3CDFF')}
+          >
+            <div className="ml-[33px] h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[#A3CDFF] "></div>
+            <div className="my-auto ml-[10px] text-[16px]">Free time</div>
+          </div>
+          <div
+            className="mt-[10px] flex cursor-pointer"
+            onClick={() => setCategory('#017A5D')}
+          >
+            <div className="ml-[33px] h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[#017A5D]"></div>
+            <div className="my-auto ml-[10px] text-[16px]">School</div>
+          </div>
+          <div
+            className="mt-[10px] flex cursor-pointer"
+            onClick={() => setCategory('#fffff')}
+          >
+            <div className="ml-[33px] h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[#fffff]"></div>
+            <div className="my-auto ml-[10px] text-[16px]">Other</div>
           </div>
         </div>
         <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
         <div className="ml-[33px] mt-[20px] flex w-[80%]">
-          <img src={calender} alt="" />
-          <div className="ml-[9px] text-[16px]">Mon, 4 November 2024</div>
+          <img src={clock} alt="" />
+          <div className="my-auto ml-[9px] text-[16px]">All day</div>
           <div className="ml-auto">
-            <img src={arrow} alt="" />
+            <button
+              onClick={handleToggle}
+              className={`${
+                isOn ? 'bg-secondary' : 'bg-gray-300'
+              } h-6 w-12 rounded-full  transition-colors duration-300 focus:outline-none`}
+            >
+              <span
+                className={`${
+                  isOn ? 'translate-x-[15px]' : 'translate-x-[-15px]'
+                } inline-block h-6 w-6 transform rounded-full bg-white shadow transition-transform duration-300`}
+              ></span>
+            </button>
+          </div>
+        </div>
+        <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
+        <div className="form-group ml-[33px] mt-[20px] flex w-[80%]">
+          <img src={calender} alt="" />
+          <div className="flex items-center">
+            <DatePicker
+              selected={selectedDate}
+              onChange={handleDateChange}
+              className="custom-datepicker w-full rounded-md border border-gray-300 px-4 py-2 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
         </div>
         <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
@@ -209,54 +246,11 @@ function App() {
           <img src={flag} alt="Flag" className="mr-2 h-4 w-4" />
           <span className="text-primary">Add priority</span>
         </button>
-        <button className="ml-auto mr-[50px] mt-[20px] flex items-center rounded-[25px] bg-secondary px-6 py-2 text-white">
-          <span className="text-primary">Save</span>
-        </button>
-        {/* <div className="mb-4">
-          <label htmlFor="title" className="block text-gray-700">
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            className="form-input mt-1 block w-full rounded-md border-gray-300 focus:border-sky-500 focus:outline-none focus:ring"
-            placeholder="Enter title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="description" className="block text-gray-700">
-            Description
-          </label>
-          <input
-            type="text"
-            id="description"
-            className="form-input mt-1 block w-full rounded-md border-gray-300 focus:border-sky-500 focus:outline-none focus:ring"
-            placeholder="Enter description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="date" className="block text-gray-700">
-            Date
-          </label>
-          <input
-            type="date"
-            id="date"
-            className="form-input mt-1 block w-full rounded-md border-gray-300 focus:border-sky-500 focus:outline-none focus:ring"
-            placeholder="Select date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-        <button
+        <input
           type="submit"
-          className="btn text-primary rounded-md bg-secondary px-4 py-2 hover:bg-blue-600"
-        >
-          Skicka
-        </button> */}
+          value="Save"
+          className="text-primary ml-auto mr-[50px] mt-[20px] flex cursor-pointer items-center rounded-[25px] bg-secondary px-6 py-2 text-white"
+        />
       </form>
     </div>
   );

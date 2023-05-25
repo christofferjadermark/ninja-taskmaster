@@ -1,9 +1,9 @@
-import Login from "./Login";
-import Home from "./Home";
-import SignUp from "./singUp";
-import SignIn from "./pages/signIn";
-import AddTask from "./pages/addTask"
-import Landing from "./pages/Landing";
+import Login from './Login';
+import Home from './Home';
+import SignUp from './singUp';
+import SignIn from './pages/signIn';
+import AddTask from './pages/addTask';
+import Landing from './pages/Landing';
 
 // createBrowserRouter
 import {
@@ -11,7 +11,7 @@ import {
   Link,
   Outlet,
   RouterProvider,
-} from "react-router-dom";
+} from 'react-router-dom';
 
 function Root() {
   return (
@@ -60,7 +60,7 @@ function Root() {
           </li>
           <li>
             <button
-              onClick={() => localStorage.removeItem("user_id")}
+              onClick={() => localStorage.removeItem('user_id')}
               className="font-semibold text-secondary hover:text-gray-200"
             >
               Logga ut
@@ -85,12 +85,12 @@ function App() {
   const router = createHashRouter([
     {
       children: [
-        { element: <Home />, path: "/home" },
-        { element: <SignUp />, path: "/signUp" },
-        { element: <SignIn />, path: "/signIn" },
-        { element: <AddTask />, path: "/addTask" },
-        { element: <Login />, path: "/" },
-        { element: <Landing />, path: "/landing" },
+        { element: <Home />, path: '/home' },
+        { element: <SignUp />, path: '/signUp' },
+        { element: <SignIn />, path: '/signIn' },
+        { element: <AddTask />, path: '/addTask' },
+        { element: <Login />, path: '/' },
+        { element: <Landing />, path: '/landing' },
       ],
       element: <Root />,
     },
