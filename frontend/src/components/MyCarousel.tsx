@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import bigNinja from "../images/bigNinja.svg";
-import clockBig from "../images/clockBig.svg";
-import head from "../images/head.svg";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Radio from "@mui/material/Radio";
+import React, { useState } from 'react';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import bigNinja from '../images/bigNinja.svg';
+import clockBig from '../images/clockBig.svg';
+import head from '../images/head.svg';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Radio from '@mui/material/Radio';
 
 function MyCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -21,10 +21,10 @@ function MyCarousel() {
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#017A5D",
+        main: '#017A5D',
       },
       secondary: {
-        main: "#4D6A6D",
+        main: '#4D6A6D',
       },
     },
   });
@@ -37,6 +37,7 @@ function MyCarousel() {
         showStatus={false}
         showThumbs={false}
         onChange={handleSlideChange}
+        showArrows={false}
       >
         <div className="carousel-slide align-center flex flex-col items-center justify-center">
           <img className="max-w-[239px]" src={head} alt="hello" />

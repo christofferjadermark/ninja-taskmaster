@@ -29,12 +29,23 @@ const pool = new pg_1.Client({
 });
 pool.connect();
 app.get('/:user_id', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    // const test = await pool.query('SELECT * FROM activities WHERE user_id = $1');
-    const query = 'SELECT * FROM activities WHERE user_id = $1';
-    const values = [request.params.user_id];
-    const result = yield pool.query(query, values);
-    console.log(result.rows);
-    response.send(result.rows);
+    try {
+        const query = `
+      SELECT activities.*, users.*
+      FROM activities
+      JOIN users ON activities.user_id = users.user_id
+      WHERE activities.user_id = $1
+    `;
+        const { user_id } = request.params;
+        const result = yield pool.query(query, [user_id]);
+        const rows = result.rows;
+        console.log(rows);
+        response.json(rows);
+    }
+    catch (error) {
+        console.error('Error fetching data:', error);
+        response.status(500).send('An error occurred while fetching data');
+    }
 }));
 app.delete('/delete/:id', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const activity_id = request.params.id;

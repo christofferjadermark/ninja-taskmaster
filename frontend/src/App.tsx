@@ -4,6 +4,7 @@ import SignUp from './singUp';
 import SignIn from './pages/signIn';
 import AddTask from './pages/addTask';
 import Landing from './pages/Landing';
+import HomePage from './pages/HomePage';
 
 // createBrowserRouter
 import {
@@ -18,14 +19,14 @@ function Root() {
     <>
       <nav className="bg-primary py-4">
         <ul className="flex justify-center">
-          <li className="mr-4">
+          {/* <li className="mr-4">
             <Link
               to="/home"
               className="font-semibold text-secondary hover:text-gray-200"
             >
               Hem
             </Link>
-          </li>
+          </li> */}
           <li className="mr-4">
             <Link
               to="/"
@@ -74,6 +75,14 @@ function Root() {
               Landing
             </Link>
           </li>
+          <li className="mr-4">
+            <Link
+              to="/HomePage"
+              className="font-semibold text-secondary hover:text-gray-200"
+            >
+              Home
+            </Link>
+          </li>
         </ul>
       </nav>
       <Outlet />
@@ -91,6 +100,7 @@ function App() {
         { element: <AddTask />, path: '/addTask' },
         { element: <Login />, path: '/' },
         { element: <Landing />, path: '/landing' },
+        { element: <HomePage />, path: '/HomePage' },
       ],
       element: <Root />,
     },
