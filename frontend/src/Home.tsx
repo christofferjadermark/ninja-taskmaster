@@ -1,15 +1,15 @@
-import { useState, useEffect, FormEvent } from "react";
-import Header from "./components/Header";
-import Button from "./components/Button";
+import { useState, useEffect, FormEvent } from 'react';
+import Header from './components/Header';
+import Button from './components/Button';
 
 function App() {
   const [data, setData] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
   useEffect(() => {
-    if (localStorage.getItem("user_id")) {
-      fetch("http://localhost:8080/" + localStorage.getItem("user_id"))
+    if (localStorage.getItem('user_id')) {
+      fetch('http://localhost:8080/' + localStorage.getItem('user_id'))
         .then((response) => response.json())
         .then((result) => {
           setData(result);
@@ -21,13 +21,13 @@ function App() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/add", {
-        method: "POST",
+      const response = await fetch('http://localhost:8080/add', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          user_id: localStorage.getItem("user_id"),
+          user_id: localStorage.getItem('user_id'),
           title: title,
           description: description,
           date: date,
@@ -35,54 +35,30 @@ function App() {
       });
       console.log(response);
       if (response.ok) {
-        console.log("Tillagd");
+        console.log('Tillagd');
       } else {
-        console.log("Inte tillagd");
+        console.log('Inte tillagd');
       }
     } catch (error) {
-      console.log("fel");
+      console.log('fel');
       // Handle ne twork or server error
     }
   };
   const handleDelete = (activity: number) => {
-    fetch("http://localhost:8080/delete/" + activity, {
-      method: "DELETE",
+    fetch('http://localhost:8080/delete/' + activity, {
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then((response) => response.json())
       .then((data: any) => {
-        console.log("Objektet har tagits bort:", data);
+        console.log('Objektet har tagits bort:', data);
       })
       .catch((error: Error) => {
-        console.error("Fel vid borttagning av objektet:", error);
+        console.error('Fel vid borttagning av objektet:', error);
       });
   };
-
-  // Christoffers kod som inte funkar
-
-  // const handleUpdate = (activity: number) => {
-  //   fetch("http://localhost:8080/update/" + activity, {
-  //     method: "PUT",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       user_id: localStorage.getItem("user_id"),
-  //       title: title,
-  //       description: description,
-  //       date: date,
-  //     }),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data: any) => {
-  //       console.log("Objektet har uppdaterats:", data);
-  //     })
-  //     .catch((error: Error) => {
-  //       console.error("Fel vid uppdatering av objektet:", error);
-  //     });
-  // };
 
   return (
     <div>
@@ -94,15 +70,15 @@ function App() {
             key={index}
           >
             <h2 className="mb-2 text-xl font-semibold text-secondary">
-              {item["title"]}
+              {item['title']}
             </h2>
             <p className="mb-2 text-gray-700">
-              Description: {item["description"]}
+              Description: {item['description']}
             </p>
-            <p className="text-gray-700">Date: {item["due_date"]}</p>
+            <p className="text-gray-700">Date: {item['due_date']}</p>
             <button
               className="absolute right-2 top-2 text-gray-500 hover:text-red-500 focus:text-red-500"
-              onClick={() => handleDelete(item["activity_id"])}
+              onClick={() => handleDelete(item['activity_id'])}
             >
               Delete
             </button>
@@ -167,7 +143,7 @@ function App() {
         </button> */}
       </form>
 
-      <Button value={"Sign up"} />
+      <Button value={'Sign up'} />
     </div>
   );
 }

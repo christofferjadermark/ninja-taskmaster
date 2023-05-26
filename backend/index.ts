@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import { Client } from 'pg';
 import cors from 'cors';
 import express from 'express';
+import { QueryResult } from 'pg';
+import { Request, Response } from 'express';
 dotenv.config();
 
 const app = express();
@@ -18,13 +20,25 @@ const pool = new Client({
 
 pool.connect();
 app.get('/:user_id', async (request, response) => {
-  // const test = await pool.query('SELECT * FROM activities WHERE user_id = $1');
-  const query = 'SELECT * FROM activities WHERE user_id = $1';
-  const values = [request.params.user_id];
-  const result = await pool.query(query, values);
-  console.log(result.rows);
-  response.send(result.rows);
+  try {
+    const query = `
+      SELECT activities.*, users.*
+      FROM activities
+      JOIN users ON activities.user_id = users.user_id
+      WHERE activities.user_id = $1
+    `;
+    const { user_id } = request.params;
+    const result = await pool.query(query, [user_id]);
+    const rows = result.rows;
+
+    console.log(rows);
+    response.json(rows);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    response.status(500).send('An error occurred while fetching data');
+  }
 });
+
 app.delete('/delete/:id', async (request, response) => {
   const activity_id = request.params.id;
   try {

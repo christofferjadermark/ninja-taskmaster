@@ -7,7 +7,7 @@ import '../index.css';
 function useRedirect() {
   const navigate = useNavigate();
   const redirectToHome = () => {
-    navigate('/home');
+    navigate('/HomePage');
   };
   return redirectToHome;
 }
