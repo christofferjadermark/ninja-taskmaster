@@ -63,11 +63,19 @@ app.delete('/delete/:id', (request, response) => __awaiter(void 0, void 0, void 
     }
 }));
 app.post('/add', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const { user_id, title, description, date, category } = request.body;
-    console.log(user_id, title, description, date, category);
+    const { user_id, title, description, date, category, allDay, priority } = request.body;
+    console.log(user_id, title, description, date, category, allDay, priority);
     try {
-        const query = 'INSERT INTO activities (user_id, title, description, due_date, completed, repeat, category) VALUES ($1, $2, $3, $4, false, false, $5)';
-        const values = [user_id, title, description, date, category];
+        const query = 'INSERT INTO activities (user_id, title, description, due_date, completed, repeat, category, all_day, priority) VALUES ($1, $2, $3, $4, false, false, $5, $6, $7)';
+        const values = [
+            user_id,
+            title,
+            description,
+            date,
+            category,
+            allDay,
+            priority,
+        ];
         yield pool
             .query(query, values)
             .then(() => {
@@ -202,11 +210,11 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
 }));
 const parseUrlEncodedMiddleware = express_1.default.urlencoded({ extended: false });
 app.post('/create', parseUrlEncodedMiddleware, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userName, email, password } = request.body;
+    const { userName, email, password, phoneNumber } = request.body;
     console.log(userName, email, password);
     try {
-        const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
-        const values = [userName, email, password];
+        const query = 'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
+        const values = [userName, email, password, phoneNumber];
         console.log(userName + '53 ');
         yield pool
             .query(query, values)
@@ -234,12 +242,12 @@ app.listen(8080, () => {
 //   password VARCHAR(255) NOT NULL
 // );
 // CREATE TABLE activities (
-//   activity_id SERIAL PRIMARY KEY,
-//   user_id INT NOT NULL,
-//   title VARCHAR(255) NOT NULL,
-//   description TEXT,
-//   due_date DATE,
-//   completed BOOLEAN DEFAULT FALSE,
-//   repeat BOOLEAN DEFAULT FALSE,
-//   FOREIGN KEY (user_id) REFERENCES users (user_id)
+// activity_id SERIAL PRIMARY KEY,
+// user_id INT NOT NULL,
+// title VARCHAR(255) NOT NULL,
+// description TEXT,
+// due_date DATE,
+// completed BOOLEAN DEFAULT FALSE,
+// repeat BOOLEAN DEFAULT FALSE,
+// FOREIGN KEY (user_id) REFERENCES users (user_id)
 // );

@@ -9,19 +9,34 @@ import pen from '../images/pen.svg';
 import flag from '../images/flag.svg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+// import { setPriority } from 'os';
+
 function App() {
-  const [hour, setHour] = useState('');
-  const [minute, setMinute] = useState('');
+  const [hour, setHour] = useState(JSON.stringify(new Date().getHours()));
+  const [minute, setMinute] = useState(JSON.stringify(new Date().getMinutes()));
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [categoryIsOpen, setCategoryIsOpen] = useState(false);
   const [category, setCategory] = useState('#ffffff');
+  const [priority, setPriority] = useState(false);
   const [categoryStyle, setCategoryStyle] = useState(
     'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
       category +
       ']'
   );
+  const [allDay, setAllDay] = useState(false);
+  const handleToggle = () => {
+    setAllDay(!allDay);
+  };
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const handleDateChange = (date: Date) => {
+    // setSelectedDate(date);
+    let updatedDate = new Date(date);
+    updatedDate.setHours(Number(hour));
+    updatedDate.setMinutes(Number(minute));
+    setSelectedDate(updatedDate);
+  };
   useEffect(() => {
     setCategoryStyle(
       'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
@@ -39,6 +54,7 @@ function App() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(selectedDate);
     try {
       const response = await fetch('http://localhost:8080/add', {
         method: 'POST',
@@ -51,6 +67,8 @@ function App() {
           description: description,
           date: selectedDate,
           category: category,
+          allDay: allDay,
+          priority: priority,
         }),
       });
       console.log(response);
@@ -72,6 +90,10 @@ function App() {
         ? ''
         : Math.min(parsedValue, 23).toString();
       setHour(sanitizedValue);
+      let date = new Date(selectedDate);
+      date.setHours(Number(sanitizedValue));
+      console.log(date);
+      setSelectedDate(date);
     }
   };
   const handleMinuteChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -83,30 +105,25 @@ function App() {
         ? ''
         : Math.min(parsedValue, 59).toString();
       setMinute(sanitizedValue);
+      let date = new Date(selectedDate);
+      date.setMinutes(Number(sanitizedValue));
+      console.log(date);
+      setSelectedDate(date);
     }
   };
 
-  const [isOn, setIsOn] = useState(false);
-
-  const handleToggle = () => {
-    setIsOn(!isOn);
-  };
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
   return (
     <div>
-      <div className="flex h-[100px]">
+      <a href="#/HomePage" className="flex h-[100px]">
         <img src={closeSvg} alt="Close" className=" ml-auto py-6 " />
-      </div>
+      </a>
       <form
         className="mx-auto max-w-md rounded-md text-[20px] "
         onSubmit={handleSubmit}
       >
         <div className="flex h-[60px] bg-gradient-to-b from-linear1  to-linear2">
           <input
-            className="my-auto ml-[33px] w-full bg-transparent text-[30px] text-white placeholder:text-white focus:outline-none"
+            className="my-auto ml-[33px] w-full border-none bg-transparent text-[30px] text-white placeholder:text-white focus:outline-none"
             type="text"
             id="title"
             placeholder="Add title"
@@ -208,18 +225,18 @@ function App() {
           <img src={clock} alt="" />
           <div className="my-auto ml-[9px] text-[16px]">All day</div>
           <div className="ml-auto">
-            <button
+            <div
               onClick={handleToggle}
               className={`${
-                isOn ? 'bg-secondary' : 'bg-gray-300'
+                allDay ? 'bg-secondary' : 'bg-gray-300'
               } h-6 w-12 rounded-full  transition-colors duration-300 focus:outline-none`}
             >
               <span
                 className={`${
-                  isOn ? 'translate-x-[15px]' : 'translate-x-[-15px]'
+                  allDay ? 'translate-x-[25px]' : 'translate-x-[0px]'
                 } inline-block h-6 w-6 transform rounded-full bg-white shadow transition-transform duration-300`}
               ></span>
-            </button>
+            </div>
           </div>
         </div>
         <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
@@ -242,10 +259,19 @@ function App() {
           </div>
         </div>
         <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
-        <button className="ml-[33px] mt-[20px] flex items-center rounded-[25px] border-[1px] border-secondary px-4 py-2">
-          <img src={flag} alt="Flag" className="mr-2 h-4 w-4" />
-          <span className="text-primary">Add priority</span>
-        </button>
+        <div
+          onClick={(e) => {
+            e.stopPropagation(); // Stoppar händelsepropagering här
+            setPriority(!priority);
+          }}
+          // className="ml-[33px] mt-[20px] flex w-[170px] items-center rounded-[25px] border-[1px] border-secondary px-4 py-2 "
+          className={`${
+            priority ? 'bg-secondary' : 'bg-transparent'
+          } ml-[33px] mt-[20px] flex w-[170px] cursor-pointer items-center rounded-[25px] border-[1px] border-secondary px-4 py-2`}
+        >
+          <img src={flag} alt="Flag" className="m-auto mr-2 h-4 w-4" />
+          <span className="text-primary m-auto">Add priority</span>
+        </div>
         <input
           type="submit"
           value="Save"

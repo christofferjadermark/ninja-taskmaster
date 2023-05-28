@@ -56,12 +56,21 @@ app.delete('/delete/:id', async (request, response) => {
 });
 
 app.post('/add', async (request, response) => {
-  const { user_id, title, description, date, category } = request.body;
-  console.log(user_id, title, description, date, category);
+  const { user_id, title, description, date, category, allDay, priority } =
+    request.body;
+  console.log(user_id, title, description, date, category, allDay, priority);
   try {
     const query =
-      'INSERT INTO activities (user_id, title, description, due_date, completed, repeat, category) VALUES ($1, $2, $3, $4, false, false, $5)';
-    const values = [user_id, title, description, date, category];
+      'INSERT INTO activities (user_id, title, description, due_date, completed, repeat, category, all_day, priority) VALUES ($1, $2, $3, $4, false, false, $5, $6, $7)';
+    const values = [
+      user_id,
+      title,
+      description,
+      date,
+      category,
+      allDay,
+      priority,
+    ];
 
     await pool
       .query(query, values)
@@ -208,12 +217,12 @@ app.post('/login', async (request, response) => {
 });
 const parseUrlEncodedMiddleware = express.urlencoded({ extended: false });
 app.post('/create', parseUrlEncodedMiddleware, async (request, response) => {
-  const { userName, email, password } = request.body;
+  const { userName, email, password, phoneNumber } = request.body;
   console.log(userName, email, password);
   try {
     const query =
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
-    const values = [userName, email, password];
+      'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
+    const values = [userName, email, password, phoneNumber];
 
     console.log(userName + '53 ');
 
@@ -245,12 +254,12 @@ app.listen(8080, () => {
 // );
 
 // CREATE TABLE activities (
-//   activity_id SERIAL PRIMARY KEY,
-//   user_id INT NOT NULL,
-//   title VARCHAR(255) NOT NULL,
-//   description TEXT,
-//   due_date DATE,
-//   completed BOOLEAN DEFAULT FALSE,
-//   repeat BOOLEAN DEFAULT FALSE,
-//   FOREIGN KEY (user_id) REFERENCES users (user_id)
+// activity_id SERIAL PRIMARY KEY,
+// user_id INT NOT NULL,
+// title VARCHAR(255) NOT NULL,
+// description TEXT,
+// due_date DATE,
+// completed BOOLEAN DEFAULT FALSE,
+// repeat BOOLEAN DEFAULT FALSE,
+// FOREIGN KEY (user_id) REFERENCES users (user_id)
 // );

@@ -5,6 +5,7 @@ import SignIn from './pages/signIn';
 import AddTask from './pages/addTask';
 import Landing from './pages/Landing';
 import HomePage from './pages/HomePage';
+import Account from './pages/MyAccount';
 
 // createBrowserRouter
 import {
@@ -17,16 +18,16 @@ import {
 function Root() {
   return (
     <>
-      <nav className="bg-primary py-4">
+      {/* <nav className="bg-primary py-4">
         <ul className="flex justify-center">
-          {/* <li className="mr-4">
+          <li className="mr-4">
             <Link
               to="/home"
               className="font-semibold text-secondary hover:text-gray-200"
             >
               Hem
             </Link>
-          </li> */}
+          </li>
           <li className="mr-4">
             <Link
               to="/"
@@ -84,7 +85,7 @@ function Root() {
             </Link>
           </li>
         </ul>
-      </nav>
+      </nav> */}
       <Outlet />
     </>
   );
@@ -101,6 +102,7 @@ function App() {
         { element: <Login />, path: '/' },
         { element: <Landing />, path: '/landing' },
         { element: <HomePage />, path: '/HomePage' },
+        { element: <Account />, path: '/account' },
       ],
       element: <Root />,
     },

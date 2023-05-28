@@ -3,6 +3,8 @@ import Header from '../components/Header';
 import homeNinja from '../images/homeNinja.svg';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import BurgerMenu from '../components/burgerMenu';
 import '@mui/material';
 import Modal from '../components/Modal';
 import React from 'react';
@@ -63,6 +65,7 @@ function HomePage() {
   return (
     <div>
       <Header />
+
       <div className="flex flex-col">
         <h1 className="ml-[32.5px] mt-[24px] font-inter text-5xl">
           Hello, <br />
