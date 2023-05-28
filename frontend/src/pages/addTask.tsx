@@ -114,9 +114,9 @@ function App() {
 
   return (
     <div>
-      <div className="flex h-[100px]">
+      <a href="#/HomePage" className="flex h-[100px]">
         <img src={closeSvg} alt="Close" className=" ml-auto py-6 " />
-      </div>
+      </a>
       <form
         className="mx-auto max-w-md rounded-md text-[20px] "
         onSubmit={handleSubmit}

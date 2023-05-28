@@ -217,12 +217,12 @@ app.post('/login', async (request, response) => {
 });
 const parseUrlEncodedMiddleware = express.urlencoded({ extended: false });
 app.post('/create', parseUrlEncodedMiddleware, async (request, response) => {
-  const { userName, email, password } = request.body;
+  const { userName, email, password, phoneNumber } = request.body;
   console.log(userName, email, password);
   try {
     const query =
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
-    const values = [userName, email, password];
+      'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
+    const values = [userName, email, password, phoneNumber];
 
     console.log(userName + '53 ');
 

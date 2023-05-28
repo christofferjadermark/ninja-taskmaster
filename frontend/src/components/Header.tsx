@@ -1,8 +1,8 @@
-import "tailwindcss/tailwind.css";
-
+import 'tailwindcss/tailwind.css';
+import BurgerMenu from './burgerMenu';
 function Header() {
   return (
-    <div className="header flex items-center justify-center gap-2">
+    <div className="header mx-auto mt-[30px] flex w-[80%] items-center justify-center gap-2">
       <svg
         width="38"
         height="38"
@@ -33,6 +33,9 @@ function Header() {
           Ninja Taskmaster
         </span>
       </h1>
+      <div className="ml-auto mt-auto ">
+        <BurgerMenu />
+      </div>
     </div>
   );
 }

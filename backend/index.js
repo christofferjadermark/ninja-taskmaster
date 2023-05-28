@@ -210,11 +210,11 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
 }));
 const parseUrlEncodedMiddleware = express_1.default.urlencoded({ extended: false });
 app.post('/create', parseUrlEncodedMiddleware, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userName, email, password } = request.body;
+    const { userName, email, password, phoneNumber } = request.body;
     console.log(userName, email, password);
     try {
-        const query = 'INSERT INTO users (username, email, password) VALUES ($1, $2, $3)';
-        const values = [userName, email, password];
+        const query = 'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
+        const values = [userName, email, password, phoneNumber];
         console.log(userName + '53 ');
         yield pool
             .query(query, values)
