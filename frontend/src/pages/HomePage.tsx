@@ -15,12 +15,14 @@ interface Activity {
   title: string;
   description: string;
   user_id: number;
+  category_id: string;
 }
 
 function HomePage() {
   const [selectedTask, setSelectedTask] = useState<number | null>(null);
   const [data, setData] = useState<Activity[]>([]);
   const [username, setUsername] = useState('');
+  const [category, setCategory] = useState('#ffffff');
 
   const handleDelete = () => {
     if (selectedTask) {
@@ -101,13 +103,13 @@ function HomePage() {
             <div className="flex items-center">
               <div className="flex items-center justify-center">
                 {/* RADIO BUTTONS START */}
-                <div className="relative flex h-4 w-4 flex-shrink-0  items-center justify-center rounded-full bg-white dark:bg-gray-100">
+                <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
                   <input
                     value={item.activity_id}
                     onChange={(e) => setSelectedTask(Number(e.target.value))}
                     type="radio"
                     name="radio"
-                    className="checkbox absolute mr-7 h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
+                    className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
                   />
                   <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
                 </div>
