@@ -1,24 +1,20 @@
-import { useState, MouseEvent } from 'react';
+import React, { useState } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import 'tailwindcss/tailwind.css';
 import check from '../images/check.svg';
 import trashcan from '../images/trashcan.svg';
 import closedoor from '../images/closedoor.svg';
 
-const Modal = () => {
+interface ModalProps {
+  selectedTask: number | null;
+  handleDelete: () => void;
+}
+
+const Modal: React.FC<ModalProps> = ({ selectedTask, handleDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const handleBackClick = (e: MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation();
-    closeModal();
+  const toggleModal = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -27,16 +23,11 @@ const Modal = () => {
         color="primary"
         style={{ color: '#898989' }}
         className="cursor-pointer"
-        onClick={openModal}
+        onClick={toggleModal}
       />
 
       {isOpen && (
-        <div
-          className="fixed inset-0 flex items-center justify-center"
-          onClick={closeModal}
-        >
-          <div className="fixed inset-0"></div>
-
+        <div className="fixed inset-0 flex items-center justify-center">
           <div className="flex items-center justify-center px-4 py-8">
             <div className="rounded-3xl bg-white p-9 text-black shadow-2xl">
               <div className="pt-4 font-inter text-xl font-medium leading-none">
@@ -51,15 +42,21 @@ const Modal = () => {
                 </div>
                 <div className="flex flex-row items-center">
                   <img className="mr-4 w-[24px]" src={trashcan} alt="" />
-                  <div className="text-center font-inter text-sm font-normal">
+                  <div
+                    onClick={handleDelete}
+                    className="text-center font-inter text-sm font-normal"
+                  >
                     Delete
                   </div>
                 </div>
               </div>
-              <div className="mt-9 flex cursor-pointer flex-row items-center">
+              <div
+                onClick={toggleModal}
+                className="mt-9 flex cursor-pointer flex-row items-center"
+              >
                 <img className="mr-4 w-[24px]" src={closedoor} alt="" />
                 <div
-                  onClick={handleBackClick}
+                  onClick={toggleModal}
                   className="cursor-pointer text-center font-inter text-sm font-normal"
                 >
                   Back

@@ -20,14 +20,9 @@ function HomePage() {
   const [selectedTask, setSelectedTask] = useState<number | null>(null);
   const [data, setData] = useState<Activity[]>([]);
   const [username, setUsername] = useState('');
-  const [category, setCategory] = useState('#ffffff');
-  const [categoryStyle, setCategoryStyle] = useState(
-    'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
-      // eslint-disable-next-line no-useless-concat
-      data[0]?.category || '' + ']'
-  );
 
   const handleDelete = () => {
+    console.log(selectedTask);
     if (selectedTask) {
       fetch('http://localhost:8080/delete/' + selectedTask, {
         method: 'DELETE',
@@ -62,19 +57,15 @@ function HomePage() {
         .then((data) => {
           setData(data);
           setUsername(data[0]?.username || '');
-
+          console.log(data[0]?.category);
           console.log(data);
         });
     }
   }, []);
 
-  useEffect(() => {
-    setCategory(
-      'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
-        category +
-        ']'
-    );
-  }, [category]);
+  const handleTaskSelection = (taskId: number) => {
+    setSelectedTask(taskId);
+  };
 
   return (
     <div>
@@ -103,15 +94,16 @@ function HomePage() {
             Today's Task's
           </h1>
           <div>
-            <Modal />
+            <Modal selectedTask={selectedTask} handleDelete={handleDelete} />
           </div>
         </div>
       </div>
 
+      {/* TASKS START */}
       <div className="mt-4 flex w-screen flex-col items-center gap-4">
         {' '}
         {data.map((item, index) => (
-          <>
+          <div key={index}>
             <div className="flex items-center">
               <div className="flex items-center justify-center">
                 {/* RADIO BUTTONS START */}
@@ -136,20 +128,15 @@ function HomePage() {
                     </p>
                   </React.Fragment>
                   <div>
-                    <div className={categoryStyle}></div>
+                    <div></div>
                   </div>
                 </div>
               </div>
             </div>
-            <button
-              onClick={handleDelete}
-              className="mx-2 my-2 rounded border border-gray-300 bg-white px-6 py-2 text-xs text-gray-800 transition duration-150 ease-in-out focus:outline-none"
-            >
-              Delete task
-            </button>
-          </>
+          </div>
         ))}
       </div>
+      {/* TASKS END */}
     </div>
   );
 }
