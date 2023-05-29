@@ -3,8 +3,6 @@ import Header from '../components/Header';
 import homeNinja from '../images/homeNinja.svg';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import BurgerMenu from '../components/burgerMenu';
 import '@mui/material';
 import Modal from '../components/Modal';
 import React from 'react';
@@ -15,7 +13,7 @@ interface Activity {
   title: string;
   description: string;
   user_id: number;
-  category_id: string;
+  category: string;
 }
 
 function HomePage() {
@@ -23,6 +21,11 @@ function HomePage() {
   const [data, setData] = useState<Activity[]>([]);
   const [username, setUsername] = useState('');
   const [category, setCategory] = useState('#ffffff');
+  const [categoryStyle, setCategoryStyle] = useState(
+    'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
+      // eslint-disable-next-line no-useless-concat
+      data[0]?.category || '' + ']'
+  );
 
   const handleDelete = () => {
     if (selectedTask) {
@@ -59,10 +62,19 @@ function HomePage() {
         .then((data) => {
           setData(data);
           setUsername(data[0]?.username || '');
+
           console.log(data);
         });
     }
   }, []);
+
+  useEffect(() => {
+    setCategory(
+      'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
+        category +
+        ']'
+    );
+  }, [category]);
 
   return (
     <div>
@@ -123,7 +135,9 @@ function HomePage() {
                       {item.title}
                     </p>
                   </React.Fragment>
-                  <div>Items</div>
+                  <div>
+                    <div className={categoryStyle}></div>
+                  </div>
                 </div>
               </div>
             </div>
