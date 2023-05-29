@@ -15,7 +15,7 @@ function Landing() {
   return (
     <>
       <Header />
-      <div className="text-11xl w  mt-10 flex h-[466.94px] items-center justify-center text-center text-gray-300">
+      <div className="text-11xl w z-20  mt-10 flex h-[466.94px] items-center justify-center text-center text-gray-300">
         <div className="box-border flex h-[466.94px] flex-col items-center gap-[32px] px-0 pb-[58px] pt-0">
           <div className="flex flex-col items-center ">
             <div className="flex flex-col items-center  gap-[60px]">
@@ -32,7 +32,7 @@ function Landing() {
               {/* Info */}
               <div className="flex max-h-96 max-w-xs flex-row gap-4">
                 <img
-                  className="max-w-[45px] justify-start"
+                  className="z-10 max-w-[45px] justify-start"
                   style={{ alignSelf: 'flex-start' }}
                   src={coin}
                   alt="hejsan"

@@ -33,7 +33,7 @@ function Header() {
           Ninja Taskmaster
         </span>
       </h1>
-      <div className="ml-auto mt-auto ">
+      <div className="z-10 ml-auto mt-auto">
         <BurgerMenu />
       </div>
     </div>
