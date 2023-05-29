@@ -179,13 +179,14 @@ app.get('/tasks', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
 app.get('/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const getTaskByIdQuery = 'SELECT * FROM tasks WHERE id = $1';
+        const getTaskByIdQuery = 'SELECT * FROM activities WHERE activity_id = $1';
         const result = yield pool.query(getTaskByIdQuery, [id]);
         if (result.rows.length === 0) {
             return res
                 .status(404)
                 .json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
         }
+        console.log(result.rows[0]);
         res.status(200).json(result.rows[0]);
     }
     catch (error) {
@@ -197,8 +198,9 @@ app.get('/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 app.put('/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { user_id, title, description, date, category, allDay, priority } = req.body;
+    console.log('Funkar');
     try {
-        const updateTaskQuery = 'UPDATE tasks SET user_id = $1, title = $2, description = $3, date = $4, category = $5, allDay = $6, priority = $7 WHERE id = $8';
+        const updateTaskQuery = 'UPDATE activities SET user_id = $1, title = $2, description = $3, due_date = $4, category = $5, all_day = $6, priority = $7 WHERE activity_id = $8';
         yield pool.query(updateTaskQuery, [
             user_id,
             title,

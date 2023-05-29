@@ -183,9 +183,8 @@ app.get('/tasks', async (_, res) => {
 // Get a single task by ID
 app.get('/tasks/:id', async (req, res) => {
   const { id } = req.params;
-
   try {
-    const getTaskByIdQuery = 'SELECT * FROM tasks WHERE id = $1';
+    const getTaskByIdQuery = 'SELECT * FROM activities WHERE activity_id = $1';
     const result = await pool.query(getTaskByIdQuery, [id]);
 
     if (result.rows.length === 0) {
@@ -193,7 +192,7 @@ app.get('/tasks/:id', async (req, res) => {
         .status(404)
         .json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
     }
-
+    console.log(result.rows[0]);
     res.status(200).json(result.rows[0]);
   } catch (error) {
     console.error(
@@ -209,10 +208,11 @@ app.put('/tasks/:id', async (req, res) => {
   const { id } = req.params;
   const { user_id, title, description, date, category, allDay, priority } =
     req.body;
+  console.log('Funkar');
 
   try {
     const updateTaskQuery =
-      'UPDATE tasks SET user_id = $1, title = $2, description = $3, date = $4, category = $5, allDay = $6, priority = $7 WHERE id = $8';
+      'UPDATE activities SET user_id = $1, title = $2, description = $3, due_date = $4, category = $5, all_day = $6, priority = $7 WHERE activity_id = $8';
     await pool.query(updateTaskQuery, [
       user_id,
       title,

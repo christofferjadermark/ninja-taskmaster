@@ -126,7 +126,10 @@ function HomePage() {
                   <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
                 </div>
                 {/* RADIO BUTTONS END */}
-                <div className="flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary bg-white">
+                <Link
+                  to={'/updateTask/' + item.activity_id}
+                  className="flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary bg-white"
+                >
                   <React.Fragment key={item.activity_id}>
                     <p className="font-inter text-xl font-medium">
                       {new Date(item.due_date).toLocaleTimeString()}
@@ -138,7 +141,7 @@ function HomePage() {
                   <div>
                     <div className={categoryStyle}></div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
             <button
