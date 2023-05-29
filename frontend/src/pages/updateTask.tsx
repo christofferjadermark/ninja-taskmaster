@@ -10,9 +10,12 @@ import flag from '../images/flag.svg';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useParams } from 'react-router-dom';
-// import { setPriority } from 'os';
+import trashCan from '../images/trashcan.svg';
+import ninjaDash from '../images/ninjaDash.svg';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
+  const navigate = useNavigate();
   const [hour, setHour] = useState(JSON.stringify(new Date().getHours()));
   const [minute, setMinute] = useState(JSON.stringify(new Date().getMinutes()));
   const [title, setTitle] = useState('');
@@ -21,6 +24,7 @@ function App() {
   const [categoryIsOpen, setCategoryIsOpen] = useState(false);
   const [category, setCategory] = useState('#ffffff');
   const [priority, setPriority] = useState(false);
+  const [deletePopup, setDeletePopup] = useState(false);
   const [categoryStyle, setCategoryStyle] = useState(
     'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
       category +
@@ -142,6 +146,12 @@ function App() {
 
   return (
     <div>
+      <div
+        className={`fixed left-0 top-0 z-20  h-full w-full transition-all  ${
+          deletePopup ? 'bg-[#000000a0]' : 'z-[-10] bg-[#00000000]'
+        }`}
+        onClick={() => setDeletePopup(!deletePopup)}
+      ></div>
       <a href="#/HomePage" className="flex h-[100px]">
         <img src={closeSvg} alt="Close" className=" ml-auto py-6 " />
       </a>
@@ -300,11 +310,74 @@ function App() {
           <img src={flag} alt="Flag" className="m-auto mr-2 h-4 w-4" />
           <span className="text-primary m-auto">Add priority</span>
         </div>
-        <input
-          type="submit"
-          value="Save"
-          className="text-primary ml-auto mr-[50px] mt-[20px] flex cursor-pointer items-center rounded-[25px] bg-secondary px-6 py-2 text-white"
-        />
+        <div className="flex justify-between">
+          <div
+            onClick={() => setDeletePopup(!deletePopup)}
+            className="ml-[33px] mt-[20px] flex cursor-pointer items-center rounded-[25px] border-[1px] border-secondary px-4 py-2"
+          >
+            <img src={trashCan} alt="Flag" className="m-auto mr-2 h-4 w-4" />
+            <span className="text-primary">Delete Task</span>
+          </div>
+          <div
+            className={`fixed left-0 right-0 top-[35%] z-30 mx-auto my-auto w-[70%] rounded-[25px]  bg-white p-[10px] text-center transition-all ${
+              deletePopup ? ' ' : 'translate-y-[-600px]'
+            }`}
+          >
+            <img
+              onClick={() => setDeletePopup(!deletePopup)}
+              className="ml-auto cursor-pointer"
+              src={closeSvg}
+              alt=""
+            />
+            <img className="mx-auto w-[30%]" src={ninjaDash} alt="" />
+
+            <div className="mt-[20px] text-[16px]">
+              Are you sure you want to erase this task from the earth's surface?
+            </div>
+
+            <div className="flex justify-between">
+              <div>
+                <input
+                  type="submit"
+                  className="ml-[20px] mt-[20px] cursor-pointer rounded-[12px] border-2 border-none bg-secondary px-[33px] py-[4px] text-[17.6px] text-white"
+                  value="Yes"
+                  onClick={() => {
+                    fetch('http://localhost:8080/delete/' + activity_id, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                    })
+                      .then((res) => {
+                        console.log(res);
+                        if (res.status === 200) {
+                          console.log('success');
+                          window.location.reload();
+                        } else {
+                          console.log('error');
+                        }
+                      })
+                      .catch((err) => console.log(err));
+                    navigate('/homePage');
+                  }}
+                />
+              </div>
+              <div>
+                <input
+                  type="button"
+                  className="mr-[20px] mt-[20px] cursor-pointer rounded-[12px] border-2 border-none bg-secondary px-[33px] py-[4px] text-[17.6px] text-white"
+                  value="No"
+                  onClick={() => setDeletePopup(!deletePopup)}
+                />
+              </div>
+            </div>
+          </div>
+          <input
+            type="submit"
+            value="Save"
+            className="mr-[45px] mt-[20px] flex items-center rounded-[25px] bg-secondary px-6 py-2 text-white"
+          />
+        </div>
       </form>
     </div>
   );
