@@ -88,34 +88,33 @@ app.post('/add', async (request, response) => {
 });
 
 // Add a new task
-app.post('/api/tasks', async (req, res) => {
-  const { description, dueDate } = req.body;
+app.post('/tasks', async (req, res) => {
+  const { user_id, title, description, date, category, allDay, priority } = req.body;
 
   try {
-    const insertTaskQuery =
-      'INSERT INTO tasks (description, due_date) VALUES ($1, $2) RETURNING *';
-    const result = await pool.query(insertTaskQuery, [description, dueDate]);
+    const insertTaskQuery = 'INSERT INTO tasks (user_id, title, description, date, category, allDay, priority) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
+    const result = await pool.query(insertTaskQuery, [user_id, title, description, date, category, allDay, priority]);
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error('Failed to create task:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Ett fel uppstod vid skapandet av en aktivitet:', error);
+    res.status(500).json({ message: 'Fel vid anslutning' });
   }
 });
 
 // Get all tasks
-app.get('/api/tasks', async (_, res) => {
+app.get('/tasks', async (_, res) => {
   try {
     const getAllTasksQuery = 'SELECT * FROM tasks';
     const result = await pool.query(getAllTasksQuery);
     res.status(200).json(result.rows);
   } catch (error) {
-    console.error('Failed to retrieve tasks:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Ett fel uppstod vid försök att hämta alla aktiviteter:', error);
+    res.status(500).json({ message: 'Fel vid anslutning' });
   }
 });
 
 // Get a single task by ID
-app.get('/api/tasks/:id', async (req, res) => {
+app.get('/tasks/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -123,34 +122,33 @@ app.get('/api/tasks/:id', async (req, res) => {
     const result = await pool.query(getTaskByIdQuery, [id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Task not found' });
+      return res.status(404).json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
     }
 
     res.status(200).json(result.rows[0]);
   } catch (error) {
-    console.error('Failed to retrieve task:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Ett fel uppstod vid försök av att hitta din aktivitet:', error);
+    res.status(500).json({ message: 'Fel vid anslutning' });
   }
 });
 
 // Update a task by ID
-app.put('/api/tasks/:id', async (req, res) => {
+app.put('/tasks/:id', async (req, res) => {
   const { id } = req.params;
-  const { description, dueDate } = req.body;
+  const { user_id, title, description, date, category, allDay, priority } = req.body;
 
   try {
-    const updateTaskQuery =
-      'UPDATE tasks SET description = $1, due_date = $2 WHERE id = $3';
-    await pool.query(updateTaskQuery, [description, dueDate, id]);
+    const updateTaskQuery = 'UPDATE tasks SET user_id = $1, title = $2, description = $3, date = $4, category = $5, allDay = $6, priority = $7 WHERE id = $8';
+    await pool.query(updateTaskQuery, [user_id, title, description, date, category, allDay, priority, id]);
     res.sendStatus(200);
   } catch (error) {
-    console.error('Failed to update task:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Ett fel uppstod vid försök att uppdatera din aktivitet:', error);
+    res.status(500).json({ message: 'Fel vid anslutning' });
   }
 });
 
 // Delete a task by ID
-app.delete('/api/tasks/:id', async (req, res) => {
+app.delete('/tasks/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -158,10 +156,11 @@ app.delete('/api/tasks/:id', async (req, res) => {
     await pool.query(deleteTaskQuery, [id]);
     res.sendStatus(204);
   } catch (error) {
-    console.error('Failed to delete task:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Ett fel uppstod vid försök att radera din aktivitet:', error);
+    res.status(500).json({ message: 'Fel vid anslutning' });
   }
 });
+
 
 // Christoffers kod för att uppdatera aktivitet, fungerar inte än
 
