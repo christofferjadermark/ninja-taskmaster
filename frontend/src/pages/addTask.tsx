@@ -8,10 +8,12 @@ import calender from '../images/calender.svg';
 import pen from '../images/pen.svg';
 import flag from '../images/flag.svg';
 import DatePicker from 'react-datepicker';
+import CustomReocurrence from '../components/customReocurrence';
 import 'react-datepicker/dist/react-datepicker.css';
 // import { setPriority } from 'os';
 
 function App() {
+  const [openRepeat, setOpenRepeat] = useState(false);
   const [hour, setHour] = useState(JSON.stringify(new Date().getHours()));
   const [minute, setMinute] = useState(JSON.stringify(new Date().getMinutes()));
   const [title, setTitle] = useState('');
@@ -25,6 +27,16 @@ function App() {
       category +
       ']'
   );
+  const [repeatType, setRepeatType] = useState('');
+  const [endDate, setEndDate] = useState('1');
+  const [endReoccurance, setEndReoccurance] = useState();
+  const [sharedVariable, setSharedVariable] = useState('');
+  const handleVariableChange = (value: boolean) => {
+    setOpenRepeat(value);
+  };
+  const handleRepeatChange = (value: string) => {
+    setRepeatType(value);
+  };
   const [allDay, setAllDay] = useState(false);
   const handleToggle = () => {
     setAllDay(!allDay);
@@ -54,28 +66,84 @@ function App() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(selectedDate);
     try {
-      const response = await fetch('http://localhost:8080/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: localStorage.getItem('user_id'),
-          title: title,
-          description: description,
-          date: selectedDate,
-          category: category,
-          allDay: allDay,
-          priority: priority,
-        }),
-      });
-      console.log(response);
-      if (response.ok) {
-        console.log('Tillagd');
+      if (endDate.includes('-')) {
+        let date = new Date(endDate);
+        let firstDate = new Date(selectedDate);
+        let addIndex = 0;
+        if (repeatType === 'Day') {
+          addIndex = 1;
+        } else if (repeatType === 'Week') {
+          addIndex = 7;
+        } else if (repeatType === 'Month') {
+          addIndex = 30;
+        }
+        const today = new Date();
+        const newDate = new Date(firstDate.getTime()); // Skapa en kopia av dagens datum
+        for (let i = 0; newDate < date; i++) {
+          const response = await fetch('http://localhost:8080/add', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_id: localStorage.getItem('user_id'),
+              title: title,
+              description: description,
+              date: newDate,
+              category: category,
+              allDay: allDay,
+              priority: priority,
+              repeatType: repeatType,
+              repeatEndDate: endDate,
+            }),
+          });
+          if (response.ok) {
+            console.log('Tillagd');
+          } else {
+            console.log('Inte tillagd');
+          }
+          newDate.setDate(newDate.getDate() + addIndex);
+        }
       } else {
-        console.log('Inte tillagd');
+        let firstDate = new Date(selectedDate);
+        let addIndex = 0;
+        if (repeatType === 'Day') {
+          addIndex = 1;
+        } else if (repeatType === 'Week') {
+          addIndex = 7;
+        } else if (repeatType === 'Month') {
+          addIndex = 30;
+        }
+        const today = new Date();
+
+        const newDate = new Date(firstDate.getTime()); // Skapa en kopia av dagens datum
+        for (let i = 0; i < Number(endDate); i++) {
+          const response = await fetch('http://localhost:8080/add', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user_id: localStorage.getItem('user_id'),
+              title: title,
+              description: description,
+              date: newDate,
+              category: category,
+              allDay: allDay,
+              priority: priority,
+              repeatType: repeatType,
+              repeatEndDate: endDate,
+            }),
+          });
+          console.log(response);
+          if (response.ok) {
+            console.log('Tillagd');
+          } else {
+            console.log('Inte tillagd');
+          }
+          newDate.setDate(newDate.getDate() + addIndex);
+        }
       }
     } catch (error) {
       console.log('fel');
@@ -92,7 +160,6 @@ function App() {
       setHour(sanitizedValue);
       let date = new Date(selectedDate);
       date.setHours(Number(sanitizedValue));
-      console.log(date);
       setSelectedDate(date);
     }
   };
@@ -107,13 +174,29 @@ function App() {
       setMinute(sanitizedValue);
       let date = new Date(selectedDate);
       date.setMinutes(Number(sanitizedValue));
-      console.log(date);
       setSelectedDate(date);
     }
   };
-
+  // const handleDateChangeProp
+  const handleDateChangeProp = (value: string) => {
+    setEndDate(value);
+  };
   return (
     <div>
+      <div
+        className={`fixed top-0 z-50 h-full w-full bg-white text-center transition-all ${
+          openRepeat ? ' ' : 'translate-y-[-1000px]'
+        }`}
+      >
+        {openRepeat && (
+          <CustomReocurrence
+            onDateChange={handleDateChangeProp}
+            onVariableChange={handleVariableChange}
+            onRepeatTypeChange={handleRepeatChange}
+          />
+        )}
+      </div>
+
       <a href="#/HomePage" className="flex h-[100px]">
         <img src={closeSvg} alt="Close" className=" ml-auto py-6 " />
       </a>
@@ -251,9 +334,18 @@ function App() {
           </div>
         </div>
         <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
-        <div className="ml-[33px] mt-[20px] flex w-[80%]">
+        <div
+          onClick={() => setOpenRepeat(!openRepeat)}
+          className="ml-[33px] mt-[20px] flex w-[80%]"
+        >
           <img src={repeat} alt="" />
-          <div className="ml-[9px] text-[16px]">Does not repeat</div>
+          <div className="ml-[9px] text-[16px]">
+            {repeatType ? (
+              <div>Repeats every {repeatType.toLowerCase()}</div>
+            ) : (
+              'Does not repeat'
+            )}
+          </div>
           <div className="ml-auto">
             <img src={arrow} alt="Arrow" />
           </div>

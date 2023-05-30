@@ -79,9 +79,26 @@ app.delete('/delete/:id', async (request, response) => {
 });
 
 app.post('/add', async (request, response) => {
-  const { user_id, title, description, date, category, allDay, priority } =
-    request.body;
-  console.log(user_id, title, description, date, category, allDay, priority);
+  const {
+    user_id,
+    title,
+    description,
+    date,
+    category,
+    allDay,
+    priority,
+    repeatType,
+  } = request.body;
+  console.log(
+    user_id,
+    title,
+    description,
+    date,
+    category,
+    allDay,
+    priority,
+    repeatType
+  );
   try {
     const query =
       'INSERT INTO activities (user_id, title, description, due_date, completed, repeat, category, all_day, priority) VALUES ($1, $2, $3, $4, false, false, $5, $6, $7)';

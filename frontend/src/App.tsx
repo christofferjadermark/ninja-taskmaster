@@ -28,6 +28,7 @@ function App() {
   const router = createHashRouter([
     {
       children: [
+        { element: <Home />, path: '/home' },
         { element: <SignUp />, path: '/signUp' },
         { element: <SignIn />, path: '/signIn' },
         { element: <AddTask />, path: '/addTask' },
