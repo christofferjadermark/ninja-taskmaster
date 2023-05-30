@@ -261,11 +261,9 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
     console.log(request.body + 'body');
     console.log(email, password + 'jjj');
     try {
-        const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
+        const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
         const values = [email, password];
         const result = yield pool.query(query, values);
-        // const test = await pool.query('SELECT * FROM activities');
-        // console.log(test.rows);
         console.log(JSON.stringify(result.rows) + 'Rows');
         if (result.rows.length > 0) {
             console.log(result.rows.length);

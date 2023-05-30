@@ -285,11 +285,9 @@ app.post('/login', async (request, response) => {
 
   console.log(email, password + 'jjj');
   try {
-    const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
+    const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
     const values = [email, password];
     const result = await pool.query(query, values);
-    // const test = await pool.query('SELECT * FROM activities');
-    // console.log(test.rows);
     console.log(JSON.stringify(result.rows) + 'Rows');
     if (result.rows.length > 0) {
       console.log(result.rows.length);
