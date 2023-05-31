@@ -3,8 +3,6 @@ import Header from '../components/Header';
 import homeNinja from '../images/homeNinja.svg';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import BurgerMenu from '../components/burgerMenu';
 import '@mui/material';
 import Modal from '../components/Modal';
 import React from 'react';
@@ -15,16 +13,19 @@ interface Activity {
   title: string;
   description: string;
   user_id: number;
-  category_id: string;
+  category: string;
 }
 
 function HomePage() {
   const [selectedTask, setSelectedTask] = useState<number | null>(null);
   const [data, setData] = useState<Activity[]>([]);
   const [username, setUsername] = useState('');
-  const [category, setCategory] = useState('#ffffff');
-
+  const [dateToShow, setDateToShow] = useState(
+    new Date().toLocaleDateString('sv-SE')
+  );
+  console.log(dateToShow);
   const handleDelete = () => {
+    console.log(selectedTask);
     if (selectedTask) {
       fetch('http://localhost:8080/delete/' + selectedTask, {
         method: 'DELETE',
@@ -58,16 +59,21 @@ function HomePage() {
         .then((res) => res.json())
         .then((data) => {
           setData(data);
+          console.log(data);
           setUsername(data[0]?.username || '');
+          console.log(data[0]?.category);
           console.log(data);
         });
     }
   }, []);
 
+  const handleTaskSelection = (taskId: number) => {
+    setSelectedTask(taskId);
+  };
+
   return (
     <div>
       <Header />
-
       <div className="flex flex-col">
         <h1 className="ml-[32.5px] mt-[24px] font-inter text-5xl">
           Hello, <br />
@@ -84,18 +90,18 @@ function HomePage() {
           <Button value={'Add task +'} />
         </Link>
       </div>
-
       <div className="flex justify-center">
         <div className="flex w-[317px] items-center justify-between">
           <h1 className="mr-auto font-inter text-3xl font-medium">
             Today's Task's
           </h1>
           <div>
-            <Modal />
+            <Modal selectedTask={selectedTask} handleDelete={handleDelete} />
           </div>
         </div>
       </div>
 
+      {/* TASKS START */}
       <div className="mt-4 flex w-screen flex-col items-center gap-4">
         {' '}
         {data.map((item, index) => (
@@ -129,16 +135,11 @@ function HomePage() {
                   <div>Items</div>
                 </div>
               </div>
-            </div>
-            <button
-              onClick={handleDelete}
-              className="mx-2 my-2 rounded border border-gray-300 bg-white px-6 py-2 text-xs text-gray-800 transition duration-150 ease-in-out focus:outline-none"
-            >
-              Delete task
-            </button>
-          </>
+            )}
+          </div>
         ))}
       </div>
+      {/* TASKS END */}
     </div>
   );
 }

@@ -12,22 +12,22 @@ const BurgerMenu: React.FC = () => {
   };
 
   return (
-    <div className="">
+    <div>
       <div
         className={`fixed left-0 top-0  h-full w-full transition-all  ${
-          isOpen ? 'bg-[#00000080]' : 'z-[-10] bg-[#00000000]'
+          isOpen ? 'bg-[#00000080]' : 'z-[-100] hidden bg-[#00000000]'
         }`}
         onClick={toggleMenu}
       ></div>
-      <button onClick={toggleMenu} className="relative z-10 cursor-pointer">
+      <button onClick={toggleMenu} className="relative z-20 cursor-pointer">
         <img src={menu} alt="" className="my-auto" />
       </button>
       <div
-        className={`menu bg-red fixed right-0  mt-[20px] transform   transition-transform duration-300 ease-in-out ${
+        className={`menu bg-red fixed right-0 z-[2000px]  mt-[20px] transform   transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <nav>
+        <nav className="">
           <ul>
             <li>
               <a
@@ -45,7 +45,7 @@ const BurgerMenu: React.FC = () => {
             <li>
               <a
                 href="#/account"
-                className="my-auto mb-2 ml-[10px] flex flex h-11 items-center items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
+                className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
               >
                 <img
                   src={account}
@@ -58,7 +58,7 @@ const BurgerMenu: React.FC = () => {
             <li>
               <a
                 href="#"
-                className="my-auto mb-2 ml-[10px] flex flex h-11 items-center items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
+                className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
               >
                 <img
                   src={calender}
@@ -71,7 +71,7 @@ const BurgerMenu: React.FC = () => {
             <li>
               <a
                 href="#/HomePage"
-                className="my-auto mb-2 ml-[10px] flex flex h-11 items-center items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
+                className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
               >
                 <img
                   src={home}
@@ -85,7 +85,7 @@ const BurgerMenu: React.FC = () => {
               <a
                 href="#/landing"
                 onClick={() => localStorage.removeItem('user_id')}
-                className="my-auto mb-2 ml-[10px] flex flex h-11 items-center items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
+                className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
               >
                 <img
                   src={logOut}

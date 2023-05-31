@@ -47,6 +47,28 @@ app.get('/:user_id', (request, response) => __awaiter(void 0, void 0, void 0, fu
         response.status(500).send('An error occurred while fetching data');
     }
 }));
+app.post('/changeAccount', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const { user_id, username, email, password, phoneNumber } = request.body;
+    console.log(user_id, username, email, password, phoneNumber);
+    try {
+        const query = 'UPDATE users SET username = $1, email = $2, password = $3, phonenumber = $4 WHERE user_id = $5';
+        const values = [username, email, password, phoneNumber, user_id];
+        yield pool
+            .query(query, values)
+            .then(() => {
+            response.status(200).send('Konto uppdaterat!');
+            console.log('Konto uppdaterat!');
+        })
+            .catch((error) => {
+            console.error('Fel vid uppdatering av konto:', error);
+            response.status(500).send('Ett fel uppstod vid uppdatering av kontot.');
+        });
+    }
+    catch (error) {
+        console.error('Fel vid anslutning:', error);
+        response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+    }
+}));
 app.delete('/delete/:id', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const activity_id = request.params.id;
     try {
@@ -60,6 +82,35 @@ app.delete('/delete/:id', (request, response) => __awaiter(void 0, void 0, void 
         response
             .status(500)
             .json({ message: 'Ett fel uppstod vid borttagning av objektet' });
+    }
+}));
+app.post('/add', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+    const { user_id, title, description, date, category, allDay, priority, repeatType, } = request.body;
+    console.log(user_id, title, description, date, category, allDay, priority, repeatType);
+    try {
+        const query = 'INSERT INTO activities (user_id, title, description, due_date, completed, repeat, category, all_day, priority) VALUES ($1, $2, $3, $4, false, false, $5, $6, $7)';
+        const values = [
+            user_id,
+            title,
+            description,
+            date,
+            category,
+            allDay,
+            priority,
+        ];
+        yield pool
+            .query(query, values)
+            .then(() => {
+            response.status(201).send('Aktivitet Tillagd!');
+        })
+            .catch((error) => {
+            console.error('Fel vid skapande av konto:', error);
+            response.status(500).send('Ett fel uppstod vid skapandet av kontot.');
+        });
+    }
+    catch (error) {
+        console.error('Fel vid anslutning:', error);
+        response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
     }
 }));
 app.post('/add', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
@@ -96,7 +147,15 @@ app.post('/tasks', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const { user_id, title, description, date, category, allDay, priority } = req.body;
     try {
         const insertTaskQuery = 'INSERT INTO tasks (user_id, title, description, date, category, allDay, priority) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
-        const result = yield pool.query(insertTaskQuery, [user_id, title, description, date, category, allDay, priority]);
+        const result = yield pool.query(insertTaskQuery, [
+            user_id,
+            title,
+            description,
+            date,
+            category,
+            allDay,
+            priority,
+        ]);
         res.status(201).json(result.rows[0]);
     }
     catch (error) {
@@ -120,11 +179,14 @@ app.get('/tasks', (_, res) => __awaiter(void 0, void 0, void 0, function* () {
 app.get('/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-        const getTaskByIdQuery = 'SELECT * FROM tasks WHERE id = $1';
+        const getTaskByIdQuery = 'SELECT * FROM activities WHERE activity_id = $1';
         const result = yield pool.query(getTaskByIdQuery, [id]);
         if (result.rows.length === 0) {
-            return res.status(404).json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
+            return res
+                .status(404)
+                .json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
         }
+        console.log(result.rows[0]);
         res.status(200).json(result.rows[0]);
     }
     catch (error) {
@@ -136,9 +198,19 @@ app.get('/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 app.put('/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const { user_id, title, description, date, category, allDay, priority } = req.body;
+    console.log('Funkar');
     try {
-        const updateTaskQuery = 'UPDATE tasks SET user_id = $1, title = $2, description = $3, date = $4, category = $5, allDay = $6, priority = $7 WHERE id = $8';
-        yield pool.query(updateTaskQuery, [user_id, title, description, date, category, allDay, priority, id]);
+        const updateTaskQuery = 'UPDATE activities SET user_id = $1, title = $2, description = $3, due_date = $4, category = $5, all_day = $6, priority = $7 WHERE activity_id = $8';
+        yield pool.query(updateTaskQuery, [
+            user_id,
+            title,
+            description,
+            date,
+            category,
+            allDay,
+            priority,
+            id,
+        ]);
         res.sendStatus(200);
     }
     catch (error) {
@@ -189,11 +261,9 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
     console.log(request.body + 'body');
     console.log(email, password + 'jjj');
     try {
-        const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
+        const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
         const values = [email, password];
         const result = yield pool.query(query, values);
-        // const test = await pool.query('SELECT * FROM activities');
-        // console.log(test.rows);
         console.log(JSON.stringify(result.rows) + 'Rows');
         if (result.rows.length > 0) {
             console.log(result.rows.length);
