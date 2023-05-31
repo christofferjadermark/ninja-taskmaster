@@ -7,6 +7,7 @@ import 'react-calendar/dist/Calendar.css';
 import '../styles/CalenderDot.css';
 import Modal from '../components/Modal';
 import { Link } from 'react-router-dom';
+import Button from '../components/Button';
 
 interface Activity {
   activity_id: number;
@@ -17,6 +18,7 @@ interface Activity {
   description: string;
   user_id: number;
   category_id: number;
+  is_completed: boolean;
 }
 
 function CalenderPage() {
@@ -32,7 +34,29 @@ function CalenderPage() {
     date: null,
     visible: false,
   });
-
+  const handleTaskCompletion = (taskId: number) => {
+    const task = data.find((item) => item.activity_id === taskId);
+    if (task) {
+      const updatedTask = { ...task, is_completed: !task.is_completed };
+      fetch('http://localhost:8080/update/' + taskId, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedTask),
+      })
+        .then((response) => response.json())
+        .then((responseData) => {
+          setData((prevData) =>
+            prevData.map((item) => (item.activity_id === taskId ? responseData : item))
+          );
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+  };
+  
   const handleDelete = () => {
     if (selectedTask.length > 0) {
       Promise.all(
@@ -47,9 +71,7 @@ function CalenderPage() {
       )
         .then((responses) => {
           console.log(responses);
-          const successfulResponses = responses.filter(
-            (res) => res.status === 200
-          );
+          const successfulResponses = responses.filter((res) => res.status === 200);
           if (successfulResponses.length === selectedTask.length) {
             console.log('success');
             setData((prevData) =>
@@ -104,11 +126,7 @@ function CalenderPage() {
       return (
         <div className="dot-container">
           {dotColors.map((color, index) => (
-            <div
-              key={index}
-              className="dot"
-              style={{ backgroundColor: color }}
-            />
+            <div key={index} className="dot" style={{ backgroundColor: color }} />
           ))}
         </div>
       );
@@ -131,13 +149,15 @@ function CalenderPage() {
 
   const handleRadioChange = (taskId: number) => {
     if (selectedTask.includes(taskId)) {
-      setSelectedTask((prevSelectedTasks) =>
-        prevSelectedTasks.filter((id) => id !== taskId)
-      );
+      setSelectedTask((prevSelectedTasks) => prevSelectedTasks.filter((id) => id !== taskId));
     } else {
       setSelectedTask((prevSelectedTasks) => [...prevSelectedTasks, taskId]);
     }
   };
+
+  const sortedTasks = [...data].sort(
+    (a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+  );
 
   return (
     <div>
@@ -152,17 +172,21 @@ function CalenderPage() {
               tileClassName={({ date }) => {
                 const formattedDate = date.toDateString();
                 const hasTasks = data.some(
-                  (item) =>
-                    new Date(item.due_date).toDateString() === formattedDate
+                  (item) => new Date(item.due_date).toDateString() === formattedDate
                 );
                 return hasTasks ? 'has-tasks' : '';
               }}
             />
           </div>
         </div>
+        <div className="mt-[24px] flex justify-center">
+          <Link to="/addTask">
+            <Button value={'Add task +'} />
+          </Link>
+        </div>
         {showTasks.visible && selectedDate && (
           <>
-            {data
+            {sortedTasks
               .filter(
                 (item) =>
                   new Date(item.due_date).toDateString() ===
@@ -196,7 +220,7 @@ function CalenderPage() {
             </button>
           )}
           <div>
-            <Modal handleDelete={handleDelete} selectedTask={0} />
+            <Modal handleDelete={handleDelete} selectedTask={0} handleTaskCompletion={handleTaskCompletion}/>
           </div>
         </div>
       </div>

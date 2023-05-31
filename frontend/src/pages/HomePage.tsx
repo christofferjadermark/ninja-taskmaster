@@ -98,7 +98,7 @@ function HomePage() {
             Today's Task's
           </h1>
           <div>
-            <Modal selectedTask={selectedTask} handleDelete={handleDelete} />
+            <Modal selectedTask={selectedTask} handleDelete={handleDelete} handleTaskCompletion={handleTaskSelection}/>
           </div>
         </div>
       </div>

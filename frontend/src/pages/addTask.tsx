@@ -12,6 +12,7 @@ import flag from '../images/flag.svg';
 import DatePicker from 'react-datepicker';
 import CustomReocurrence from '../components/customReocurrence';
 import 'react-datepicker/dist/react-datepicker.css';
+import '../styles/CalenderDot.css';
 // import { setPriority } from 'os';
 
 function App() {

@@ -64,6 +64,27 @@
   background-color: #017a5d;
 }
 
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.completed-task {
+  opacity: 0.5;
+}
+
+.task-completed {
+  text-decoration: line-through;
+}
+
+.task-not-completed:hover {
+  background-color: #f2f2f2;
+}
 
 
 
