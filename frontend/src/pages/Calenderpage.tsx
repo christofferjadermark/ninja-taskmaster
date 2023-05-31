@@ -7,12 +7,12 @@ import 'react-calendar/dist/Calendar.css';
 import '../styles/CalenderDot.css';
 import Modal from '../components/Modal';
 
-
 interface Activity {
   activity_id: number;
   start_date: string;
   due_date: string;
   title: string;
+  category: string;
   description: string;
   user_id: number;
   category_id: number;
@@ -24,7 +24,10 @@ function CalenderPage() {
   const [username, setUsername] = useState('');
   const [category, setCategory] = useState('#ffffff');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [showTasks, setShowTasks] = useState<{ date: Date | null; visible: boolean }>({
+  const [showTasks, setShowTasks] = useState<{
+    date: Date | null;
+    visible: boolean;
+  }>({
     date: null,
     visible: false,
   });
@@ -49,7 +52,9 @@ function CalenderPage() {
           if (successfulResponses.length === selectedTask.length) {
             console.log('success');
             setData((prevData) =>
-              prevData.filter((item) => !selectedTask.includes(item.activity_id))
+              prevData.filter(
+                (item) => !selectedTask.includes(item.activity_id)
+              )
             );
             setSelectedTask([]); // Clear the selected tasks after deletion
           } else {
@@ -190,7 +195,7 @@ function CalenderPage() {
             </button>
           )}
           <div>
-          <Modal handleDelete={handleDelete} selectedTask={0} />
+            <Modal handleDelete={handleDelete} selectedTask={0} />
           </div>
         </div>
       </div>
@@ -229,7 +234,11 @@ function CalenderPage() {
                         {item.title}
                       </p>
                     </React.Fragment>
-                    <div>Items</div>
+                    <div
+                      className={` h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[${item.category}]`}
+                    >
+                      {/* {JSON.stringify(item.category)} */}
+                    </div>
                   </div>
                 </div>
               ))}

@@ -21,6 +21,7 @@ function HomePage() {
   const [dateToShow, setDateToShow] = useState(
     new Date().toLocaleDateString('sv-SE')
   );
+  const [categoryStyle, setCategoryIsOpen] = useState();
   console.log(dateToShow);
 
   const handleDelete = () => {
@@ -128,14 +129,19 @@ function HomePage() {
                   >
                     <React.Fragment key={item.activity_id}>
                       <p className="font-inter text-xl font-medium">
-                        {new Date(item.due_date).toLocaleTimeString()}
+                        {new Date(item.due_date).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
                       </p>
                       <p className="font-inter text-xl font-light">
                         {item.title}
                       </p>
                     </React.Fragment>
                     <div>
-                      <div></div>
+                      <div
+                        className={`h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[${item.category}]`}
+                      ></div>
                     </div>
                   </Link>
                 </div>

@@ -29,16 +29,16 @@ function App() {
   const router = createHashRouter([
     {
       children: [
-        { element: <Home />, path: '/home' },
+        { element: <HomePage />, path: '/home' },
         { element: <SignUp />, path: '/signUp' },
         { element: <SignIn />, path: '/signIn' },
         { element: <AddTask />, path: '/addTask' },
-        { element: <Login />, path: '/' },
+        { element: <Landing />, path: '/' },
         { element: <Landing />, path: '/landing' },
         { element: <HomePage />, path: '/HomePage' },
         { element: <Account />, path: '/account' },
         { element: <UpdateTask />, path: '/updateTask/:activity_id' },
-        {element: <CalenderPage/>, path: '/CalenderPage'}
+        { element: <CalenderPage />, path: '/CalenderPage' },
       ],
       element: <Root />,
     },
