@@ -105,10 +105,10 @@ function HomePage() {
       <div className="mt-4 flex w-screen flex-col items-center gap-4">
         {' '}
         {data.map((item, index) => (
-          <div key={index}>
+          <>
             {dateToShow ===
               new Date(item.due_date).toLocaleDateString('sv-SE') && (
-              <div className="flex items-center">
+              <div key={index} className="flex items-center">
                 <div className="flex items-center justify-center">
                   {/* RADIO BUTTONS START */}
                   <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
@@ -141,7 +141,7 @@ function HomePage() {
                 </div>
               </div>
             )}
-          </div>
+          </>
         ))}
       </div>
       {/* TASKS END */}

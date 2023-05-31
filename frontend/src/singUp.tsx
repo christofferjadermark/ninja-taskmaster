@@ -1,9 +1,10 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import signUpNinja from './images/signUp.svg';
 import './App.css';
 import './index.css';
+import { error } from 'console';
 
 function useRedirect() {
   const navigate = useNavigate();
@@ -14,13 +15,88 @@ function useRedirect() {
 }
 
 function App() {
+  interface errors {
+    phoneNumberError: string;
+    emailError: string;
+    passwordError: string;
+  }
+  const [myErrors, setMyErrors] = useState<errors>({
+    phoneNumberError: '',
+    emailError: '',
+    passwordError: '',
+  });
+  // const myErrors: errors = {
+  //   phoneNumberError: '',
+  //   emailError: '',
+  //   passwordError: '',
+  // };
+  function isValidEmail(email: string) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+  function isValidPhoneNumber(number: string) {
+    // Regular expression pattern to validate phone number
+    const phonePattern = /^\d{10}$/;
+    return phonePattern.test(number);
+  }
   const redirectToHome = useRedirect();
   const [userName, setUserName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+  const navigate = useNavigate();
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setMyErrors((prevState) => ({
+      phoneNumberError: '',
+      passwordError: '',
+      emailError: '',
+    }));
+    if (password !== confirmPassword || password === '') {
+      setMyErrors((prevState) => ({
+        ...prevState,
+        passwordError: 'Passwords dont match',
+      }));
+      return;
+    } else if (!isValidEmail(email)) {
+      setMyErrors((prevState) => ({
+        ...prevState,
+        emailError: 'Invalid emailadress',
+      }));
+      return;
+    } else if (!isValidPhoneNumber(phoneNumber)) {
+      setMyErrors((prevState) => ({
+        ...prevState,
+        phoneNumberError: 'Invalid phonenumber',
+      }));
+      return;
+    } else {
+      try {
+        const response = await fetch('http://localhost:8080/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userName: userName,
+            email: email,
+            password: password,
+            phoneNumber: phoneNumber,
+          }),
+        });
+        console.log(response);
+        if (response.ok) {
+          console.log('Skapat');
+          navigate('/SignIn');
+        } else {
+          console.log('Inte skapat');
+        }
+      } catch (error) {
+        console.log('fel');
+      }
+    }
+  };
   useEffect(() => {
     if (localStorage.getItem('user_id')) {
       redirectToHome();
@@ -42,11 +118,7 @@ function App() {
           alt="Ninja Taskmaster"
           className="my-[30px] w-full"
         />
-        <form
-          className="mx-auto "
-          action="http://localhost:8080/create"
-          method="POST"
-        >
+        <form onSubmit={handleSubmit} className="mx-auto ">
           <label>
             <h2>Enter first and last name</h2>
             <input
@@ -58,7 +130,11 @@ function App() {
               onChange={(e) => setUserName(e.target.value)}
             />
           </label>
-          <h2>Enter email address</h2>
+          {myErrors.emailError ? (
+            <div className="text-red-500">{myErrors.emailError}</div>
+          ) : (
+            <h2>Enter email address</h2>
+          )}
           <label>
             <input
               className="placeholder-italic my-[13px] w-full rounded-[25px] border-2 border-secondary px-[32px] py-[8px]"
@@ -70,7 +146,11 @@ function App() {
             />
           </label>
           <label className="h-fit">
-            <h2 className="mr-2">Enter phone number</h2>
+            {myErrors.phoneNumberError ? (
+              <div className="text-red-500">{myErrors.phoneNumberError}</div>
+            ) : (
+              <h2 className="mr-2">Enter phone number</h2>
+            )}
             <input
               className="placeholder-italic my-[13px] w-full rounded-[25px] border-2 border-secondary px-[32px] py-[8px]"
               style={{ fontStyle: 'italic' }}
@@ -81,7 +161,11 @@ function App() {
             />
           </label>
           <label>
-            <h2>Enter password</h2>
+            {myErrors.passwordError ? (
+              <div className="text-red-500">{myErrors.passwordError}</div>
+            ) : (
+              <h2>Enter password</h2>
+            )}
             <input
               name="password"
               placeholder="Example1"

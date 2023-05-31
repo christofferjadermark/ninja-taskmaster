@@ -1,4 +1,6 @@
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import closeSvg from '../images/close.svg';
 import burger from '../images/addTaskBurger.svg';
 import arrow from '../images/arrow.svg';
@@ -27,10 +29,10 @@ function App() {
       category +
       ']'
   );
+  const navigate = useNavigate();
   const [repeatType, setRepeatType] = useState('');
   const [endDate, setEndDate] = useState('1');
-  const [endReoccurance, setEndReoccurance] = useState();
-  const [sharedVariable, setSharedVariable] = useState('');
+
   const handleVariableChange = (value: boolean) => {
     setOpenRepeat(value);
   };
@@ -139,6 +141,7 @@ function App() {
           console.log(response);
           if (response.ok) {
             console.log('Tillagd');
+            navigate('/HomePage');
           } else {
             console.log('Inte tillagd');
           }

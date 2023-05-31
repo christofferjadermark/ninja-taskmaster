@@ -39,8 +39,19 @@ app.get('/:user_id', (request, response) => __awaiter(void 0, void 0, void 0, fu
         const { user_id } = request.params;
         const result = yield pool.query(query, [user_id]);
         const rows = result.rows;
-        console.log(rows);
-        response.json(rows);
+        if (rows.length === 0) {
+            const query2 = `
+      SELECT * FROM users WHERE user_id = $1
+    `;
+            const result2 = yield pool.query(query2, [user_id]);
+            const rows2 = result2.rows;
+            console.log(rows2);
+            response.json(rows2);
+        }
+        else {
+            console.log(rows);
+            response.json(rows);
+        }
     }
     catch (error) {
         console.error('Error fetching data:', error);
@@ -278,10 +289,9 @@ app.post('/login', (request, response) => __awaiter(void 0, void 0, void 0, func
         response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
     }
 }));
-const parseUrlEncodedMiddleware = express_1.default.urlencoded({ extended: false });
-app.post('/create', parseUrlEncodedMiddleware, (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+app.post('/create', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
     const { userName, email, password, phoneNumber } = request.body;
-    console.log(userName, email, password);
+    console.log(userName);
     try {
         const query = 'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
         const values = [userName, email, password, phoneNumber];

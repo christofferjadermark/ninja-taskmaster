@@ -106,6 +106,7 @@ function App() {
       console.log(response);
       if (response.ok) {
         console.log('Uppdaterad');
+        navigate('/HomePage');
       } else {
         console.log('Inte uppdaterad');
       }
@@ -375,7 +376,7 @@ function App() {
           <input
             type="submit"
             value="Save"
-            className="mr-[45px] mt-[20px] flex items-center rounded-[25px] bg-secondary px-6 py-2 text-white"
+            className="mr-[45px] mt-[20px] flex cursor-pointer items-center rounded-[25px] bg-secondary px-6 py-2 text-white"
           />
         </div>
       </form>
