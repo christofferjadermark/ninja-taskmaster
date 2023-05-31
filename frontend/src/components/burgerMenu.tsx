@@ -31,8 +31,8 @@ const BurgerMenu: React.FC = () => {
           <ul>
             <li>
               <a
-                href="#"
-                className=" my-auto mb-2 ml-[10px] flex h-11  items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary pr-20 text-white transition-all hover:translate-x-3"
+                href="#/Calenderpage"
+                className=" my-auto mb-2 ml-[10px] flex flex h-11 items-center items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary pr-20 text-white transition-all hover:translate-x-3"
               >
                 <img
                   src={calender}

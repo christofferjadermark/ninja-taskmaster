@@ -7,6 +7,7 @@ import Landing from './pages/Landing';
 import HomePage from './pages/HomePage';
 import Account from './pages/MyAccount';
 import UpdateTask from './pages/updateTask';
+import CalenderPage from './pages/Calenderpage';
 
 // createBrowserRouter
 import {
@@ -32,11 +33,12 @@ function App() {
         { element: <SignUp />, path: '/signUp' },
         { element: <SignIn />, path: '/signIn' },
         { element: <AddTask />, path: '/addTask' },
-        { element: <Landing />, path: '/' },
+        { element: <Login />, path: '/' },
         { element: <Landing />, path: '/landing' },
         { element: <HomePage />, path: '/HomePage' },
         { element: <Account />, path: '/account' },
         { element: <UpdateTask />, path: '/updateTask/:activity_id' },
+        {element: <CalenderPage/>, path: '/CalenderPage'}
       ],
       element: <Root />,
     },

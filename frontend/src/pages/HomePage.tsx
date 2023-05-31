@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import homeNinja from '../images/homeNinja.svg';
 import Button from '../components/Button';
-import { Link } from 'react-router-dom';
-import '@mui/material';
 import Modal from '../components/Modal';
-import React from 'react';
 
 interface Activity {
   activity_id: number;
@@ -24,10 +22,11 @@ function HomePage() {
     new Date().toLocaleDateString('sv-SE')
   );
   console.log(dateToShow);
+
   const handleDelete = () => {
     console.log(selectedTask);
     if (selectedTask) {
-      fetch('http://localhost:8080/delete/' + selectedTask, {
+      fetch(`http://localhost:8080/delete/${selectedTask}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -37,7 +36,9 @@ function HomePage() {
           console.log(res);
           if (res.status === 200) {
             console.log('success');
-            window.location.reload();
+            setData((prevData) =>
+              prevData.filter((item) => item.activity_id !== selectedTask)
+            );
           } else {
             console.log('error');
           }
@@ -50,7 +51,7 @@ function HomePage() {
     const storedUser = localStorage.getItem('user_id');
     console.log(storedUser);
     if (storedUser) {
-      fetch('http://localhost:8080/' + storedUser, {
+      fetch(`http://localhost:8080/${storedUser}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +104,6 @@ function HomePage() {
 
       {/* TASKS START */}
       <div className="mt-4 flex w-screen flex-col items-center gap-4">
-        {' '}
         {data.map((item, index) => (
           <>
             {dateToShow ===
@@ -148,4 +148,5 @@ function HomePage() {
     </div>
   );
 }
+
 export default HomePage;
