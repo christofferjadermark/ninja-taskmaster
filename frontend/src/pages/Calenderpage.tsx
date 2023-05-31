@@ -142,7 +142,7 @@ function CalenderPage() {
   return (
     <div>
       <Header />
-      <div className="mt-4 flex w-screen flex-col items-center gap-4">
+      <div className="mt-4 flex w-screen flex-col items-center ">
         <div className="">
           <div className="custom-calendar">
             <Calendar
