@@ -36,7 +36,7 @@ function HomePage() {
           console.log(res);
           if (res.status === 200) {
             console.log('success');
-            window.location.reload();
+            setData((prevData) => prevData.filter(item => item.activity_id !== selectedTask));
           } else {
             console.log('error');
           }
@@ -116,8 +116,11 @@ function HomePage() {
                 {/* RADIO BUTTONS END */}
                 <div className="flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary bg-white">
                   <React.Fragment key={item.activity_id}>
-                    <p className="font-inter text-xl font-medium">
-                      {new Date(item.due_date).toLocaleTimeString()}
+                  <p className="text-custom-title-time font-inter text-xl font-medium">
+                      {new Date(item.due_date).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
                     </p>
                     <p className="font-inter text-xl font-light">
                       {item.title}

@@ -6,6 +6,7 @@ import AddTask from './pages/addTask';
 import Landing from './pages/Landing';
 import HomePage from './pages/HomePage';
 import Account from './pages/MyAccount';
+import CalenderPage from './pages/Calenderpage';
 
 // createBrowserRouter
 import {
@@ -99,6 +100,7 @@ function App() {
         { element: <SignUp />, path: '/signUp' },
         { element: <SignIn />, path: '/signIn' },
         { element: <AddTask />, path: '/addTask' },
+        { element: <CalenderPage />, path: '/Calenderpage' },
         { element: <Login />, path: '/' },
         { element: <Landing />, path: '/landing' },
         { element: <HomePage />, path: '/HomePage' },
