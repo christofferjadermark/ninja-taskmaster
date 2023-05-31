@@ -10,12 +10,7 @@ import UpdateTask from './pages/updateTask';
 import CalenderPage from './pages/Calenderpage';
 
 // createBrowserRouter
-import {
-  createHashRouter,
-  Link,
-  Outlet,
-  RouterProvider,
-} from 'react-router-dom';
+import { createHashRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 function Root() {
   return (
