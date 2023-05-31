@@ -6,6 +6,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalenderDot.css';
 import Modal from '../components/Modal';
+import { Link } from 'react-router-dom';
 
 interface Activity {
   activity_id: number;
@@ -210,37 +211,42 @@ function CalenderPage() {
                   showTasks.date?.toDateString()
               )
               .map((item, index) => (
-                <div key={item.activity_id} className="flex items-center">
-                  <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
-                    <input
-                      value={item.activity_id}
-                      onChange={() => handleRadioChange(item.activity_id)}
-                      checked={selectedTask.includes(item.activity_id)}
-                      type="checkbox"
-                      name="checkbox"
-                      className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
-                    />
-                    <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
-                  </div>
-                  <div className="bg-custom-tile flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary">
-                    <React.Fragment key={item.activity_id}>
-                      <p className="text-custom-title-time font-inter text-xl font-medium">
-                        {new Date(item.due_date).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
-                      <p className="text-custom-title font-inter text-xl font-light">
-                        {item.title}
-                      </p>
-                    </React.Fragment>
-                    <div
-                      className={` h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[${item.category}]`}
-                    >
-                      {/* {JSON.stringify(item.category)} */}
+                <Link
+                  to={'/updateTask/' + item.activity_id}
+                  className="cursor-pointer"
+                >
+                  <div key={item.activity_id} className="flex items-center">
+                    <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
+                      <input
+                        value={item.activity_id}
+                        onChange={() => handleRadioChange(item.activity_id)}
+                        checked={selectedTask.includes(item.activity_id)}
+                        type="checkbox"
+                        name="checkbox"
+                        className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
+                      />
+                      <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
+                    </div>
+                    <div className="bg-custom-tile flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary">
+                      <React.Fragment key={item.activity_id}>
+                        <p className="text-custom-title-time font-inter text-xl font-medium">
+                          {new Date(item.due_date).toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </p>
+                        <p className="text-custom-title font-inter text-xl font-light">
+                          {item.title}
+                        </p>
+                      </React.Fragment>
+                      <div
+                        className={` h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[${item.category}]`}
+                      >
+                        {/* {JSON.stringify(item.category)} */}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
           </>
         )}
