@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import homeNinja from '../images/homeNinja.svg';
 import Button from '../components/Button';
-import { Link } from 'react-router-dom';
-import '@mui/material';
 import Modal from '../components/Modal';
-import React from 'react';
 
 interface Activity {
   activity_id: number;
@@ -24,10 +22,11 @@ function HomePage() {
     new Date().toLocaleDateString('sv-SE')
   );
   console.log(dateToShow);
+
   const handleDelete = () => {
     console.log(selectedTask);
     if (selectedTask) {
-      fetch('http://localhost:8080/delete/' + selectedTask, {
+      fetch(`http://localhost:8080/delete/${selectedTask}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +49,7 @@ function HomePage() {
     const storedUser = localStorage.getItem('user_id');
     console.log(storedUser);
     if (storedUser) {
-      fetch('http://localhost:8080/' + storedUser, {
+      fetch(`http://localhost:8080/${storedUser}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -103,39 +102,34 @@ function HomePage() {
 
       {/* TASKS START */}
       <div className="mt-4 flex w-screen flex-col items-center gap-4">
-        {' '}
         {data.map((item, index) => (
-          <>
-            <div className="flex items-center">
-              <div className="flex items-center justify-center">
-                {/* RADIO BUTTONS START */}
-                <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
-                  <input
-                    value={item.activity_id}
-                    onChange={(e) => setSelectedTask(Number(e.target.value))}
-                    type="radio"
-                    name="radio"
-                    className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
-                  />
-                  <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
-                </div>
-                {/* RADIO BUTTONS END */}
-                <div className="flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary bg-white">
-                  <React.Fragment key={item.activity_id}>
-                  <p className="text-custom-title-time font-inter text-xl font-medium">
-                      {new Date(item.due_date).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
-                    <p className="font-inter text-xl font-light">
-                      {item.title}
-                    </p>
-                  </React.Fragment>
-                  <div>Items</div>
-                </div>
+          <div key={item.activity_id} className="flex items-center">
+            <div className="flex items-center justify-center">
+              {/* RADIO BUTTONS START */}
+              <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
+                <input
+                  value={item.activity_id}
+                  onChange={(e) => setSelectedTask(Number(e.target.value))}
+                  type="radio"
+                  name="radio"
+                  className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
+                />
+                <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
               </div>
-            )}
+              {/* RADIO BUTTONS END */}
+              <div className="flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary bg-white">
+                <p className="text-custom-title-time font-inter text-xl font-medium">
+                  {new Date(item.due_date).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+                <p className="font-inter text-xl font-light">
+                  {item.title}
+                </p>
+              </div>
+              <div>Items</div>
+            </div>
           </div>
         ))}
       </div>
@@ -143,4 +137,5 @@ function HomePage() {
     </div>
   );
 }
+
 export default HomePage;

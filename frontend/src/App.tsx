@@ -6,6 +6,8 @@ import AddTask from './pages/addTask';
 import Landing from './pages/Landing';
 import HomePage from './pages/HomePage';
 import Account from './pages/MyAccount';
+import UpdateTask from './pages/updateTask';
+import CalenderPage from './pages/Calenderpage';
 
 // createBrowserRouter
 import {
@@ -36,6 +38,7 @@ function App() {
         { element: <HomePage />, path: '/HomePage' },
         { element: <Account />, path: '/account' },
         { element: <UpdateTask />, path: '/updateTask/:activity_id' },
+        {element: <CalenderPage/>, path: '/CalenderPage'}
       ],
       element: <Root />,
     },

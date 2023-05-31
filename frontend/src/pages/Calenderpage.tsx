@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
-import homeNinja from '../images/homeNinja.svg';
-import Button from '../components/Button';
-import { Link } from 'react-router-dom';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import BurgerMenu from '../components/burgerMenu';
 import '@mui/material';
-import Modal from '../components/Modal';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/CalenderDot.css';
+import Modal from '../components/Modal';
+
 
 interface Activity {
   activity_id: number;
+  start_date: string;
   due_date: string;
   title: string;
   description: string;
@@ -23,7 +19,7 @@ interface Activity {
 }
 
 function CalenderPage() {
-  const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
+  const [selectedTask, setSelectedTask] = useState<number[]>([]);
   const [data, setData] = useState<Activity[]>([]);
   const [username, setUsername] = useState('');
   const [category, setCategory] = useState('#ffffff');
@@ -31,12 +27,12 @@ function CalenderPage() {
   const [showTasks, setShowTasks] = useState<{ date: Date | null; visible: boolean }>({
     date: null,
     visible: false,
-  }); // Update state for showing tasks
+  });
 
   const handleDelete = () => {
-    if (selectedTasks.length > 0) {
+    if (selectedTask.length > 0) {
       Promise.all(
-        selectedTasks.map((taskId) =>
+        selectedTask.map((taskId) =>
           fetch('http://localhost:8080/delete/' + taskId, {
             method: 'DELETE',
             headers: {
@@ -50,12 +46,12 @@ function CalenderPage() {
           const successfulResponses = responses.filter(
             (res) => res.status === 200
           );
-          if (successfulResponses.length === selectedTasks.length) {
+          if (successfulResponses.length === selectedTask.length) {
             console.log('success');
             setData((prevData) =>
-              prevData.filter((item) => !selectedTasks.includes(item.activity_id))
+              prevData.filter((item) => !selectedTask.includes(item.activity_id))
             );
-            setSelectedTasks([]); // Clear the selected tasks after deletion
+            setSelectedTask([]); // Clear the selected tasks after deletion
           } else {
             console.log('error');
           }
@@ -86,7 +82,7 @@ function CalenderPage() {
   const handleDateChange = (value: Date | Date[] | null) => {
     if (value instanceof Date) {
       setSelectedDate(value);
-      setShowTasks({ date: value, visible: true }); // Update the showTasks state with selected date and set it to visible
+      setShowTasks({ date: value, visible: true });
     }
   };
 
@@ -95,10 +91,10 @@ function CalenderPage() {
     const tasks = data.filter(
       (item) => new Date(item.due_date).toDateString() === formattedDate
     );
-  
+
     if (tasks.length > 0 && view === 'month') {
       const dotColors = tasks.map((task) => getCategoryColor(task.category_id));
-  
+
       return (
         <div className="dot-container">
           {dotColors.map((color, index) => (
@@ -111,10 +107,10 @@ function CalenderPage() {
         </div>
       );
     }
-  
+
     return null;
   };
-  
+
   const getCategoryColor = (categoryId: number): string => {
     if (categoryId === 1) {
       return '#F17B25'; // Work color
@@ -123,25 +119,24 @@ function CalenderPage() {
     } else if (categoryId === 3) {
       return '#017A5D'; // School color
     }
-  
+
     return '#000000'; // Default color if category ID is not matched
   };
-  
 
   const handleRadioChange = (taskId: number) => {
-    if (selectedTasks.includes(taskId)) {
-      setSelectedTasks((prevSelectedTasks) =>
+    if (selectedTask.includes(taskId)) {
+      setSelectedTask((prevSelectedTasks) =>
         prevSelectedTasks.filter((id) => id !== taskId)
       );
     } else {
-      setSelectedTasks((prevSelectedTasks) => [...prevSelectedTasks, taskId]);
+      setSelectedTask((prevSelectedTasks) => [...prevSelectedTasks, taskId]);
     }
   };
 
   return (
     <div>
       <Header />
-      <div className="mt-4  flex w-screen flex-col items-center gap-4">
+      <div className="mt-4 flex w-screen flex-col items-center gap-4">
         <div className="">
           <div className="custom-calendar">
             <Calendar
@@ -159,7 +154,7 @@ function CalenderPage() {
             />
           </div>
         </div>
-        {showTasks.visible && selectedDate && ( // Show tasks when showTasks state is visible and selectedDate is not null
+        {showTasks.visible && selectedDate && (
           <>
             {data
               .filter(
@@ -178,25 +173,30 @@ function CalenderPage() {
 
       <div className="flex justify-center">
         <div className="flex w-[317px] items-center justify-between">
-        <h1 className="mr-auto font-inter text-3xl font-medium">
-        {selectedDate ? selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'Select a date'}
-</h1>
-         {selectedTasks.length > 0 && (
-  <button
-    onClick={handleDelete}
-    className="mx-2 my-2 rounded border border-gray-300 bg-white px-6 py-2 text-xs text-gray-800 transition duration-150 ease-in-out focus:outline-none"
-  >
-    {selectedTasks.length === 1 ? 'Delete task' : 'Delete tasks'}
-  </button>
-)}
+          <h1 className="mr-auto font-inter text-3xl font-medium">
+            {selectedDate
+              ? selectedDate.toLocaleDateString('en-US', {
+                  month: 'long',
+                  day: 'numeric',
+                })
+              : 'Select a date'}
+          </h1>
+          {selectedTask.length > 0 && (
+            <button
+              onClick={handleDelete}
+              className="mx-2 my-2 rounded border border-gray-300 bg-white px-6 py-2 text-xs text-gray-800 transition duration-150 ease-in-out focus:outline-none"
+            >
+              {selectedTask.length === 1 ? 'Delete task' : 'Delete tasks'}
+            </button>
+          )}
           <div>
-            <Modal />
+          <Modal handleDelete={handleDelete} selectedTask={0} />
           </div>
         </div>
       </div>
 
       <div className="mt-4 flex w-screen flex-col items-center gap-4">
-        {showTasks.visible && selectedDate && ( // Show tasks when showTasks state is visible and selectedDate is not null
+        {showTasks.visible && selectedDate && (
           <>
             {data
               .filter(
@@ -210,9 +210,9 @@ function CalenderPage() {
                     <input
                       value={item.activity_id}
                       onChange={() => handleRadioChange(item.activity_id)}
-                      checked={selectedTasks.includes(item.activity_id)}
-                      type="checkbox" // Change type to checkbox
-                      name="checkbox" // Change name to checkbox
+                      checked={selectedTask.includes(item.activity_id)}
+                      type="checkbox"
+                      name="checkbox"
                       className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
                     />
                     <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
