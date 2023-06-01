@@ -4,6 +4,7 @@ import calender from '../images/calenderWhite.svg';
 import home from '../images/home.svg';
 import logOut from '../images/logOut.svg';
 import account from '../images/account.svg';
+import settings from '../images/settings.svg';
 const BurgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -57,15 +58,15 @@ const BurgerMenu: React.FC = () => {
             </li>
             <li>
               <a
-                href="#"
+                // href="#"
                 className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
               >
                 <img
-                  src={calender}
+                  src={settings}
                   className="my-auto ml-[10px] inline-block h-5 w-5"
                   alt=""
                 />
-                <span className="ml-2">Calender</span>
+                <span className="ml-2">Settings</span>
               </a>
             </li>
             <li>
