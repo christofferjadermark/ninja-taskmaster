@@ -17,8 +17,43 @@ const pool = new Client({
   port: parseInt(process.env.PGPORT || '5432', 10),
   user: process.env.PGUSER,
 });
-
+const adjustDateToGMTPlus2 = (date: Date): Date => {
+  const gmtPlus2Offset = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+  const adjustedDate = new Date(date.getTime() + gmtPlus2Offset);
+  return adjustedDate;
+};
 pool.connect();
+const updateOverdueTasks = async () => {
+  try {
+    const currentDate = new Date().toISOString();
+
+    const query = `
+      UPDATE activities
+      SET completed = true
+      WHERE due_date < $1 AND completed = false
+    `;
+
+    await pool.query(query, [currentDate]);
+  } catch (error) {
+    console.error('Error updating overdue tasks:', error);
+  }
+};
+
+const updateOverdueTasksWithOffset = async () => {
+  try {
+    const currentDate = adjustDateToGMTPlus2(new Date()).toISOString();
+
+    const query = `
+      UPDATE activities
+      SET completed = true
+      WHERE due_date < $1 AND completed = false
+    `;
+
+    await pool.query(query, [currentDate]);
+  } catch (error) {
+    console.error('Error updating overdue tasks:', error);
+  }
+};
 app.get('/:user_id', async (request, response) => {
   try {
     const query = `
@@ -276,35 +311,6 @@ app.delete('/tasks/:id', async (req, res) => {
   }
 });
 
-// Christoffers kod för att uppdatera aktivitet, fungerar inte än
-
-// app.patch('/update', async (request, response) => {
-//   const { activity_id, title, description, date } = request.body;
-//   console.log(activity_id, title, description, date);
-//   const user = 'SELECT * FROM users WHERE user_id = $1'
-
-//   try {
-//     const query =
-//       'UPDATE activities SET title = $1, description = $2, due_date = $3 WHERE activity_id = $4';
-//     const values = [title, description, date, activity_id];
-
-//     await pool
-//       .query(query, values)
-//       .then(() => {
-//         response.status(201).send('Aktivitet Uppdaterad!');
-//       })
-//       .catch((error: Error) => {
-//         console.error('Fel vid skapande av konto:', error);
-//         response
-//           .status(500)
-//           .send('Ett fel uppstod vid uppdatering av aktiviteten.');
-//       });
-//   } catch (error) {
-//     console.error('Fel vid anslutning:', error);
-//     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
-//   }
-// });
-
 app.post('/login', async (request, response) => {
   const { email, password } = request.body;
   console.log(request.body + 'body');
@@ -355,6 +361,35 @@ app.post('/create', async (request, response) => {
 app.listen(8080, () => {
   console.log('Webbtjänsten kan nu ta emot anrop.');
 });
+
+// Christoffers kod för att uppdatera aktivitet, fungerar inte än
+
+// app.patch('/update', async (request, response) => {
+//   const { activity_id, title, description, date } = request.body;
+//   console.log(activity_id, title, description, date);
+//   const user = 'SELECT * FROM users WHERE user_id = $1'
+
+//   try {
+//     const query =
+//       'UPDATE activities SET title = $1, description = $2, due_date = $3 WHERE activity_id = $4';
+//     const values = [title, description, date, activity_id];
+
+//     await pool
+//       .query(query, values)
+//       .then(() => {
+//         response.status(201).send('Aktivitet Uppdaterad!');
+//       })
+//       .catch((error: Error) => {
+//         console.error('Fel vid skapande av konto:', error);
+//         response
+//           .status(500)
+//           .send('Ett fel uppstod vid uppdatering av aktiviteten.');
+//       });
+//   } catch (error) {
+//     console.error('Fel vid anslutning:', error);
+//     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+//   }
+// });
 
 // CREATE TABLE users (
 //   user_id SERIAL PRIMARY KEY,

@@ -267,6 +267,10 @@ custom-calendar .react-calendar__navigation button,
   outline: none;
 }
 
+.custom-calender .react-calendar__navigation__label:active {
+  background-color: #015c49;
+}
+
 .custom-calendar .react-calendar__navigation__label:hover,
 .custom-calendar .react-calendar__navigation__arrow:hover {
   background-color: #015c49;

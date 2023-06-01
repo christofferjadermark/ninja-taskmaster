@@ -70,9 +70,13 @@ function App() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      // Convert selectedDate to GMT+2 timezone
+      const selectedDateGMT = new Date(selectedDate);
+      selectedDateGMT.setUTCHours(selectedDateGMT.getUTCHours() + 2);
+    
       if (endDate.includes('-')) {
         let date = new Date(endDate);
-        let firstDate = new Date(selectedDate);
+        let firstDate = new Date(selectedDateGMT);
         let addIndex = 0;
         if (repeatType === 'Day') {
           addIndex = 1;
@@ -82,7 +86,7 @@ function App() {
           addIndex = 30;
         }
         const today = new Date();
-        const newDate = new Date(firstDate.getTime()); // Skapa en kopia av dagens datum
+        const newDate = new Date(firstDate.getTime()); // Create a copy of the selected date
         for (let i = 0; newDate < date; i++) {
           const response = await fetch('http://localhost:8080/add', {
             method: 'POST',
@@ -102,14 +106,14 @@ function App() {
             }),
           });
           if (response.ok) {
-            console.log('Tillagd');
+            console.log('Added');
           } else {
-            console.log('Inte tillagd');
+            console.log('Not added');
           }
           newDate.setDate(newDate.getDate() + addIndex);
         }
       } else {
-        let firstDate = new Date(selectedDate);
+        let firstDate = new Date(selectedDateGMT);
         let addIndex = 0;
         if (repeatType === 'Day') {
           addIndex = 1;
@@ -119,8 +123,8 @@ function App() {
           addIndex = 30;
         }
         const today = new Date();
-
-        const newDate = new Date(firstDate.getTime()); // Skapa en kopia av dagens datum
+  
+        const newDate = new Date(firstDate.getTime()); // Create a copy of the selected date
         for (let i = 0; i < Number(endDate); i++) {
           const response = await fetch('http://localhost:8080/add', {
             method: 'POST',
@@ -141,18 +145,21 @@ function App() {
           });
           console.log(response);
           if (response.ok) {
-            console.log('Tillagd');
+            console.log('Added');
             navigate('/HomePage');
           } else {
-            console.log('Inte tillagd');
+            console.log('Not added');
           }
           newDate.setDate(newDate.getDate() + addIndex);
         }
       }
     } catch (error) {
-      console.log('fel');
+      console.log('Error');
     }
   };
+  
+  
+  
   const handleHourChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.slice(0, 2); // Begränsa till 2 tecken
 
@@ -226,7 +233,7 @@ function App() {
           <input
             type="text"
             id="hour"
-            className="text-primary maxlength-2 w-[65px] rounded-[25px] border-[3px] border-secondary bg-transparent px-4 py-2"
+            className="text-primary maxlength-2 w-[65px] rounded-[25px] border-[3px] border-secondary bg-transparent px-4 py-2 text-xl"
             placeholder="07"
             value={hour}
             onChange={handleHourChange}
@@ -234,7 +241,7 @@ function App() {
           <input
             type="text"
             id="minute"
-            className="text-primary w-[65px] rounded-[25px] border-[3px] border-secondary bg-transparent px-4 py-2"
+            className="text-primary w-[65px] rounded-[25px] border-[3px] border-secondary bg-transparent px-4 py-2 text-xl"
             placeholder="00"
             value={minute}
             onChange={handleMinuteChange}

@@ -176,17 +176,7 @@ function CalenderPage() {
     return null;
   };
 
-  const getCategoryColor = (categoryId: number): string => {
-    if (categoryId === 1) {
-      return '#F17B25'; // Work color
-    } else if (categoryId === 2) {
-      return '#A3CDFF'; // Free time color
-    } else if (categoryId === 3) {
-      return '#017A5D'; // School color
-    }
-
-    return '#000000'; // Default color if category ID is not matched
-  };
+  
 
   const handleRadioChange = (taskId: number) => {
     if (selectedTask.includes(taskId)) {
@@ -197,7 +187,7 @@ function CalenderPage() {
   };
 
   const sortedTasks = [...data].sort(
-    (a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+    (a, b) => new Date(b.due_date).getTime() - new Date(a.due_date).getTime()
   );
 
   return (
@@ -238,12 +228,13 @@ function CalenderPage() {
               : 'Select a date'}
           </h1>
           {selectedTask.length > 0 && (
-            <button
-              onClick={handleDelete}
-              className="mx-2 my-2 rounded border border-gray-300 bg-white px-6 py-2 text-xs text-gray-800 transition duration-150 ease-in-out focus:outline-none"
-            >
-              {selectedTask.length === 1 ? 'Delete task' : 'Delete tasks'}
-            </button>
+ <button
+ onClick={handleDelete}
+ className="mx-2 my-2 rounded border border-gray-300 bg-green-600 px-6 py-2 text-xs text-white transition duration-150 ease-in-out focus:outline-none"
+>
+ {selectedTask.length === 1 ? 'Delete task' : 'Delete tasks'}
+</button>
+
           )}
           <div>
             <Modal handleDelete={handleDelete} selectedTask={0} handleTaskCompletion={handleTaskCompletion}/>
