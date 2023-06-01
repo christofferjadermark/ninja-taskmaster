@@ -89,3 +89,195 @@
 
 
 
+.dot-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.custom-calendar .react-calendar {
+  margin-bottom: 20px;
+  background-color: #017a5d;
+  border: none;
+  border-radius: 10px;
+}
+
+.custom-calendar .react-calendar__tile,
+.custom-calendar .react-calendar__month-view,
+.custom-calendar .react-calendar__year-view,
+.custom-calendar .react-calendar__decade-view,
+.custom-calendar .react-calendar__century-view {
+  background-color: #017a5d;
+  border-radius: 10px;
+  color: #e0efeb;
+}
+
+.custom-calendar .react-calendar__navigation button {
+  color: #e0efeb;
+  background-color: #017a5d;
+  border-radius: 10px;
+}
+
+.has-tasks .react-calendar__tile {
+  background-color: #017a5d;
+}
+
+.text-custom-title-time {
+  color: black;
+}
+
+.text-custom-title {
+  color: black;
+}
+
+.custom-calendar .react-calendar__navigation button:active,
+.custom-calendar .react-calendar__navigation button:focus,
+.custom-calendar .react-calendar__century-view button:active,
+.custom-calendar .react-calendar__century-view button:focus,
+.custom-calendar .react-calendar__decade-view button:active,
+.custom-calendar .react-calendar__decade-view button:focus {
+  background-color: #017a5d;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.completed-task {
+  opacity: 0.5;
+}
+
+.task-completed {
+  text-decoration: line-through;
+}
+
+.task-not-completed:hover {
+  background-color: #f2f2f2;
+}
+
+.custom-calendar .react-calendar__navigation button,
+.custom-calendar .react-calendar__year-view button,
+.custom-calendar .react-calendar__century-view button,
+.custom-calendar .react-calendar__decade-view button {
+  color: #e0efeb;
+  background-color: #017a5d;
+  border-radius: 10px;
+  outline: none;
+}
+
+.custom-calendar .react-calendar__navigation button:hover,
+.custom-calendar .react-calendar__year-view button:hover,
+.custom-calendar .react-calendar__century-view button:hover,
+.custom-calendar .react-calendar__decade-view button:hover {
+  background-color: #015c49;
+}
+
+.custom-calendar .react-calendar__navigation button.react-calendar__navigation__arrow:enabled:hover,
+.custom-calendar .react-calendar__year-view button.react-calendar__navigation__arrow:enabled:hover,
+.custom-calendar .react-calendar__decade-view button.react-calendar__navigation__arrow:enabled:hover,
+.custom-calendar .react-calendar__decade-view button.react-calendar__navigation__arrow:enabled:hover {
+  background-color: #015c49;
+}
+
+.custom-calendar .react-calendar__month-view__navigation__label,
+.custom-calendar .react-calendar__year-view__navigation__label {
+  color: #e0efeb;
+}
+
+.custom-calendar .react-calendar__month-view__weekdays__weekday,
+.custom-calendar .react-calendar__year-view__months__month {
+  color: #e0efeb;
+}
+
+.custom-calendar .react-calendar__navigation__label,
+.custom-calendar .react-calendar__navigation__arrow {
+  color: #e0efeb;
+  background-color: #017a5d;
+  border-radius: 10px;
+  outline: none;
+}
+
+.custom-calendar .react-calendar__navigation__label:hover,
+.custom-calendar .react-calendar__navigation__arrow:hover {
+  background-color: #015c49;
+}
+
+.custom-calendar .react-calendar__viewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-calendar .react-calendar__navigation {
+  margin-bottom: 10px;
+}
+custom-calendar .react-calendar__navigation button,
+.custom-calendar .react-calendar__year-view button,
+.custom-calendar .react-calendar__century-view button,
+.custom-calendar .react-calendar__decade-view button {
+  color: #e0efeb;
+  background-color: #017a5d;
+  border-radius: 10px;
+  outline: none;
+}
+
+.custom-calendar .react-calendar__navigation button:hover,
+.custom-calendar .react-calendar__year-view button:hover,
+.custom-calendar .react-calendar__century-view button:hover,
+.custom-calendar .react-calendar__decade-view button:hover {
+  background-color: #015c49;
+}
+
+.custom-calendar .react-calendar__navigation button.react-calendar__navigation__arrow:enabled:hover,
+.custom-calendar .react-calendar__year-view button.react-calendar__navigation__arrow:enabled:hover,
+.custom-calendar .react-calendar__decade-view button.react-calendar__navigation__arrow:enabled:hover,
+.custom-calendar .react-calendar__decade-view button.react-calendar__navigation__arrow:enabled:hover {
+  background-color: #015c49;
+}
+
+.custom-calendar .react-calendar__month-view__navigation__label,
+.custom-calendar .react-calendar__year-view__navigation__label {
+  color: #e0efeb;
+}
+
+.custom-calendar .react-calendar__month-view__weekdays__weekday,
+.custom-calendar .react-calendar__year-view__months__month {
+  color: #e0efeb;
+}
+
+.custom-calendar .react-calendar__navigation__label,
+.custom-calendar .react-calendar__navigation__arrow {
+  color: #e0efeb;
+  background-color: #017a5d;
+  border-radius: 10px;
+  outline: none;
+}
+
+.custom-calendar .react-calendar__navigation__label:hover,
+.custom-calendar .react-calendar__navigation__arrow:hover {
+  background-color: #015c49;
+}
+
+.custom-calendar .react-calendar__viewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-calendar .react-calendar__navigation {
+  margin-bottom: 10px;
+}

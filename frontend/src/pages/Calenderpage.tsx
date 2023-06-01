@@ -111,6 +111,43 @@ function CalenderPage() {
     if (value instanceof Date) {
       setSelectedDate(value);
       setShowTasks({ date: value, visible: true });
+  
+      const currentDate = new Date();
+      const pastTasks = data.filter((item) => new Date(item.due_date) < currentDate);
+  
+      if (pastTasks.length > 0) {
+        const updatedTasks = pastTasks.map((task) => ({
+          ...task,
+          is_completed: true,
+        }));
+  
+        Promise.all(
+          updatedTasks.map((task) =>
+            fetch('http://localhost:8080/update/' + task.activity_id, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(task),
+            })
+          )
+        )
+          .then((responses) => {
+            console.log(responses);
+            const successfulResponses = responses.filter((res) => res.status === 200);
+            if (successfulResponses.length === updatedTasks.length) {
+              console.log('success');
+              setData((prevData) =>
+                prevData.map((item) =>
+                  updatedTasks.find((task) => task.activity_id === item.activity_id) || item
+                )
+              );
+            } else {
+              console.log('error');
+            }
+          })
+          .catch((err) => console.log(err));
+      }
     }
   };
 
@@ -121,12 +158,16 @@ function CalenderPage() {
     );
 
     if (tasks.length > 0 && view === 'month') {
-      const dotColors = tasks.map((task) => getCategoryColor(task.category_id));
+      const dotColors = tasks.map((task) => task.category);
 
       return (
         <div className="dot-container">
           {dotColors.map((color, index) => (
-            <div key={index} className="dot" style={{ backgroundColor: color }} />
+            <div
+              key={index}
+              className="dot"
+              style={{ backgroundColor: color }}
+            />
           ))}
         </div>
       );
@@ -184,21 +225,6 @@ function CalenderPage() {
             <Button value={'Add task +'} />
           </Link>
         </div>
-        {showTasks.visible && selectedDate && (
-          <>
-            {sortedTasks
-              .filter(
-                (item) =>
-                  new Date(item.due_date).toDateString() ===
-                  showTasks.date?.toDateString()
-              )
-              .map((item, index) => (
-                <div key={item.activity_id} className="flex items-center">
-                  {/* Task components */}
-                </div>
-              ))}
-          </>
-        )}
       </div>
 
       <div className="flex justify-center">
@@ -226,54 +252,51 @@ function CalenderPage() {
       </div>
 
       <div className="mt-4 flex w-screen flex-col items-center gap-4">
-        {showTasks.visible && selectedDate && (
-          <>
-            {data
-              .filter(
-                (item) =>
-                  new Date(item.due_date).toDateString() ===
-                  showTasks.date?.toDateString()
-              )
-              .map((item, index) => (
-                <Link
-                  to={'/updateTask/' + item.activity_id}
-                  className="cursor-pointer"
-                >
-                  <div key={item.activity_id} className="flex items-center">
-                    <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
-                      <input
-                        value={item.activity_id}
-                        onChange={() => handleRadioChange(item.activity_id)}
-                        checked={selectedTask.includes(item.activity_id)}
-                        type="checkbox"
-                        name="checkbox"
-                        className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
-                      />
-                      <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
-                    </div>
-                    <div className="bg-custom-tile flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary">
-                      <React.Fragment key={item.activity_id}>
-                        <p className="text-custom-title-time font-inter text-xl font-medium">
-                          {new Date(item.due_date).toLocaleTimeString([], {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })}
-                        </p>
-                        <p className="text-custom-title font-inter text-xl font-light">
-                          {item.title}
-                        </p>
-                      </React.Fragment>
-                      <div
-                        className={` h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[${item.category}]`}
-                      >
-                        {/* {JSON.stringify(item.category)} */}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-          </>
-        )}
+      {showTasks.visible && selectedDate && (
+  <>
+    {sortedTasks
+      .filter(
+        (item) =>
+          new Date(item.due_date).toDateString() ===
+          showTasks.date?.toDateString()
+      )
+      .map((item, index) => (
+        <div key={item.activity_id} className="flex items-center">
+          <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
+            <input
+              value={item.activity_id}
+              onChange={() => handleRadioChange(item.activity_id)}
+              checked={selectedTask.includes(item.activity_id)}
+              type="checkbox"
+              name="checkbox"
+              className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
+            />
+            <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
+          </div>
+          <Link to={'/updateTask/' + item.activity_id} className="cursor-pointer">
+            <div className="bg-custom-tile flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary">
+              <React.Fragment key={item.activity_id}>
+                <p className="text-custom-title-time font-inter text-xl font-medium">
+                  {new Date(item.due_date).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </p>
+                <p className="text-custom-title font-inter text-xl font-light">
+                  {item.title}
+                </p>
+              </React.Fragment>
+              <div
+                className={` h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[${item.category}]`}
+              >
+                {/* {JSON.stringify(item.category)} */}
+              </div>
+            </div>
+          </Link>
+        </div>
+      ))}
+  </>
+)}
       </div>
     </div>
   );

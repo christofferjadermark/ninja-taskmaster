@@ -294,9 +294,9 @@ function App() {
           </div>
           <div
             className="mt-[10px] flex cursor-pointer"
-            onClick={() => setCategory('#017A5D')}
+            onClick={() => setCategory('#FFC107')}
           >
-            <div className="ml-[33px] h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[#017A5D]"></div>
+            <div className="ml-[33px] h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[#FFC107]"></div>
             <div className="my-auto ml-[10px] text-[16px]">School</div>
           </div>
           <div
