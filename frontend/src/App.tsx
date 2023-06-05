@@ -1,6 +1,4 @@
-import Login from './Login';
-import Home from './Home';
-import SignUp from './singUp';
+import SignUp from './pages/singUp';
 import SignIn from './pages/signIn';
 import AddTask from './pages/addTask';
 import Landing from './pages/Landing';
@@ -8,7 +6,6 @@ import HomePage from './pages/HomePage';
 import Account from './pages/MyAccount';
 import UpdateTask from './pages/updateTask';
 import CalenderPage from './pages/Calenderpage';
-
 
 // createBrowserRouter
 import { createHashRouter, Outlet, RouterProvider } from 'react-router-dom';

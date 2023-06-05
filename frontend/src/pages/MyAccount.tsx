@@ -1,7 +1,6 @@
 import React from 'react';
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import signUpNinja from '../images/signUp.svg';
 import '../index.css';
 import closeSvg from '../images/close.svg';
 import pen from '../images/greenPen.svg';
@@ -27,7 +26,6 @@ function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hiddenPassword, setHiddenPassword] = useState('');
-  const [data, setData] = useState([]);
   const [username, setUsername] = useState('');
   const [accountPopup, setAccountPopup] = useState(false);
   const [tempAccountName, setTempAccountName] = useState('');
@@ -81,7 +79,6 @@ function App() {
         .then((res) => res.json())
         .then((data) => {
           console.log(data[0]);
-          setData(data);
           console.log(data);
           setUsername(data[0]?.username || '');
           setTempAccountName(data[0]?.username || '');

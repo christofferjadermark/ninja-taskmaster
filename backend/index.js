@@ -230,7 +230,8 @@ app.get('/tasks/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 .status(404)
                 .json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
         }
-        console.log(result.rows[0]);
+        result.rows[0].due_date.setHours(result.rows[0].due_date.getHours() + 0);
+        console.log(result.rows[0].due_date);
         res.status(200).json(result.rows[0]);
     }
     catch (error) {
@@ -319,48 +320,6 @@ app.post('/create', (request, response) => __awaiter(void 0, void 0, void 0, fun
         response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
     }
 }));
-// });
 app.listen(8080, () => {
     console.log('Webbtjänsten kan nu ta emot anrop.');
 });
-// Christoffers kod för att uppdatera aktivitet, fungerar inte än
-// app.patch('/update', async (request, response) => {
-//   const { activity_id, title, description, date } = request.body;
-//   console.log(activity_id, title, description, date);
-//   const user = 'SELECT * FROM users WHERE user_id = $1'
-//   try {
-//     const query =
-//       'UPDATE activities SET title = $1, description = $2, due_date = $3 WHERE activity_id = $4';
-//     const values = [title, description, date, activity_id];
-//     await pool
-//       .query(query, values)
-//       .then(() => {
-//         response.status(201).send('Aktivitet Uppdaterad!');
-//       })
-//       .catch((error: Error) => {
-//         console.error('Fel vid skapande av konto:', error);
-//         response
-//           .status(500)
-//           .send('Ett fel uppstod vid uppdatering av aktiviteten.');
-//       });
-//   } catch (error) {
-//     console.error('Fel vid anslutning:', error);
-//     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
-//   }
-// });
-// CREATE TABLE users (
-//   user_id SERIAL PRIMARY KEY,
-//   username VARCHAR(255) NOT NULL,
-//   email VARCHAR(255) NOT NULL,
-//   password VARCHAR(255) NOT NULL
-// );
-// CREATE TABLE activities (
-// activity_id SERIAL PRIMARY KEY,
-// user_id INT NOT NULL,
-// title VARCHAR(255) NOT NULL,
-// description TEXT,
-// due_date DATE,
-// completed BOOLEAN DEFAULT FALSE,
-// repeat BOOLEAN DEFAULT FALSE,
-// FOREIGN KEY (user_id) REFERENCES users (user_id)
-// );

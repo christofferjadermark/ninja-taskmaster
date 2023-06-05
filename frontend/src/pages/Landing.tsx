@@ -1,4 +1,3 @@
-import Header from '../components/Header';
 import Button from '../components/Button';
 import coin from '../images/coin.svg';
 import chat from '../images/chatBox.svg';
