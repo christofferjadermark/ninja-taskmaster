@@ -72,8 +72,9 @@ function App() {
     try {
       // Convert selectedDate to GMT+2 timezone
       const selectedDateGMT = new Date(selectedDate);
-      selectedDateGMT.setUTCHours(selectedDateGMT.getUTCHours() + 2);
-    
+      console.log(selectedDateGMT);
+      selectedDateGMT.setUTCHours(selectedDateGMT.getUTCHours());
+      console.log(selectedDateGMT);
       if (endDate.includes('-')) {
         let date = new Date(endDate);
         let firstDate = new Date(selectedDateGMT);
@@ -123,7 +124,7 @@ function App() {
           addIndex = 30;
         }
         const today = new Date();
-  
+
         const newDate = new Date(firstDate.getTime()); // Create a copy of the selected date
         for (let i = 0; i < Number(endDate); i++) {
           const response = await fetch('http://localhost:8080/add', {
@@ -157,9 +158,7 @@ function App() {
       console.log('Error');
     }
   };
-  
-  
-  
+
   const handleHourChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.slice(0, 2); // Begränsa till 2 tecken
 
@@ -263,7 +262,7 @@ function App() {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Write hear..."
+            placeholder="Write here..."
             className=" ml-[33px] mt-[20px] h-[180px] w-[80%] resize-none rounded-[25px] border-[1px] border-secondary px-2 py-1 pl-[33px] text-gray-800 placeholder:text-[16px] focus:outline-none"
           ></textarea>
         </div>

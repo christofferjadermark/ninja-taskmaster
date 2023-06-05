@@ -84,6 +84,7 @@ function App() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(selectedDate);
     try {
       const response = await fetch(
         'http://localhost:8080/tasks/' + activity_id,
