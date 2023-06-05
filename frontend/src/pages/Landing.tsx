@@ -1,4 +1,3 @@
-import Header from '../components/Header';
 import Button from '../components/Button';
 import coin from '../images/coin.svg';
 import chat from '../images/chatBox.svg';
@@ -11,6 +10,7 @@ import instagram from '../images/instagram.svg';
 import { Link } from 'react-router-dom';
 import '../styles/carousel.css';
 import MyCarousel from '../components/MyCarousel';
+
 function Landing() {
   return (
     <>

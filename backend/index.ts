@@ -1,14 +1,31 @@
 import dotenv from 'dotenv';
 import { Client } from 'pg';
 import cors from 'cors';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { QueryResult } from 'pg';
-import { Request, Response } from 'express';
+
+const webpush = require('web-push');
+const crypto = require('crypto');
+const path = require('path');
+
+const keys = {
+  publicKey:
+    'BAti49YH8sN8PIsN30BLyPQYXU85RdtkJ1ITaApHBmezvqCxmCFI0xtDquo9cWMfaGP2V2vDSovrICxJzmN7Gd0',
+  privateKey: 'Eda5AdccGizAySb3EKP2f5Xzo4ovQu9Pn6LI9mA0vW0',
+};
+
+webpush.setVapidDetails(
+  'mailto:example@yourdomain.org',
+  keys.publicKey,
+  keys.privateKey
+);
+
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 const pool = new Client({
   database: process.env.PGDATABASE,
@@ -54,6 +71,9 @@ const updateOverdueTasksWithOffset = async () => {
     console.error('Error updating overdue tasks:', error);
   }
 };
+
+// GET
+
 app.get('/:user_id', async (request, response) => {
   try {
     const query = `
@@ -82,6 +102,43 @@ app.get('/:user_id', async (request, response) => {
     response.status(500).send('An error occurred while fetching data');
   }
 });
+app.get('/tasks', async (_, res) => {
+  try {
+    const getAllTasksQuery = 'SELECT * FROM tasks';
+    const result = await pool.query(getAllTasksQuery);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error(
+      'Ett fel uppstod vid försök att hämta alla aktiviteter:',
+      error
+    );
+    res.status(500).json({ message: 'Fel vid anslutning' });
+  }
+});
+app.get('/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const getTaskByIdQuery = 'SELECT * FROM activities WHERE activity_id = $1';
+    const result = await pool.query(getTaskByIdQuery, [id]);
+
+    if (result.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
+    }
+    console.log(result.rows[0]);
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error(
+      'Ett fel uppstod vid försök av att hitta din aktivitet:',
+      error
+    );
+    res.status(500).json({ message: 'Fel vid anslutning' });
+  }
+});
+
+// POSTS
+
 app.post('/changeAccount', async (request, response) => {
   const { user_id, username, email, password, phoneNumber } = request.body;
   console.log(user_id, username, email, password, phoneNumber);
@@ -106,22 +163,51 @@ app.post('/changeAccount', async (request, response) => {
     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
   }
 });
-app.delete('/delete/:id', async (request, response) => {
-  const activity_id = request.params.id;
-  try {
-    const query = 'DELETE FROM activities WHERE activity_id = $1';
-    const values = [activity_id];
-    await pool.query(query, values);
+app.post('/login', async (request, response) => {
+  const { email, password } = request.body;
+  console.log(request.body + 'body');
 
-    response.status(200).json({ message: 'Objektet har tagits bort' });
+  console.log(email, password + 'jjj');
+  try {
+    const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
+    const values = [email, password];
+    const result = await pool.query(query, values);
+    console.log(JSON.stringify(result.rows) + 'Rows');
+    if (result.rows.length > 0) {
+      console.log(result.rows.length);
+      response.json(result.rows);
+    } else {
+      response.status(401).json({ message: 'Ogiltiga inloggningsuppgifter.' });
+    }
   } catch (error) {
-    console.error('Fel vid borttagning av objektet:', error);
-    response
-      .status(500)
-      .json({ message: 'Ett fel uppstod vid borttagning av objektet' });
+    console.error('Fel vid anslutning:', error);
+    response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
   }
 });
+app.post('/create', async (request, response) => {
+  const { userName, email, password, phoneNumber } = request.body;
+  console.log(userName);
+  try {
+    const query =
+      'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
+    const values = [userName, email, password, phoneNumber];
 
+    console.log(userName + '53 ');
+
+    await pool
+      .query(query, values)
+      .then(() => {
+        response.status(201).send('Konto skapat!');
+      })
+      .catch((error: Error) => {
+        console.error('Fel vid skapande av konto:', error);
+        response.status(500).send('Ett fel uppstod vid skapandet av kontot.');
+      });
+  } catch (error) {
+    console.error('Fel vid anslutning:', error);
+    response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+  }
+});
 app.post('/add', async (request, response) => {
   const {
     user_id,
@@ -201,8 +287,6 @@ app.post('/add', async (request, response) => {
     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
   }
 });
-
-// Add a new task
 app.post('/tasks', async (req, res) => {
   const { user_id, title, description, date, category, allDay, priority } =
     req.body;
@@ -226,45 +310,8 @@ app.post('/tasks', async (req, res) => {
   }
 });
 
-// Get all tasks
-app.get('/tasks', async (_, res) => {
-  try {
-    const getAllTasksQuery = 'SELECT * FROM tasks';
-    const result = await pool.query(getAllTasksQuery);
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error(
-      'Ett fel uppstod vid försök att hämta alla aktiviteter:',
-      error
-    );
-    res.status(500).json({ message: 'Fel vid anslutning' });
-  }
-});
+// PUTS
 
-// Get a single task by ID
-app.get('/tasks/:id', async (req, res) => {
-  const { id } = req.params;
-  try {
-    const getTaskByIdQuery = 'SELECT * FROM activities WHERE activity_id = $1';
-    const result = await pool.query(getTaskByIdQuery, [id]);
-
-    if (result.rows.length === 0) {
-      return res
-        .status(404)
-        .json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
-    }
-    console.log(result.rows[0]);
-    res.status(200).json(result.rows[0]);
-  } catch (error) {
-    console.error(
-      'Ett fel uppstod vid försök av att hitta din aktivitet:',
-      error
-    );
-    res.status(500).json({ message: 'Fel vid anslutning' });
-  }
-});
-
-// Update a task by ID
 app.put('/tasks/:id', async (req, res) => {
   const { id } = req.params;
   const { user_id, title, description, date, category, allDay, priority } =
@@ -294,7 +341,8 @@ app.put('/tasks/:id', async (req, res) => {
   }
 });
 
-// Delete a task by ID
+// DELETES
+
 app.delete('/tasks/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -310,86 +358,76 @@ app.delete('/tasks/:id', async (req, res) => {
     res.status(500).json({ message: 'Fel vid anslutning' });
   }
 });
-
-app.post('/login', async (request, response) => {
-  const { email, password } = request.body;
-  console.log(request.body + 'body');
-
-  console.log(email, password + 'jjj');
+app.delete('/delete/:id', async (request, response) => {
+  const activity_id = request.params.id;
   try {
-    const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
-    const values = [email, password];
-    const result = await pool.query(query, values);
-    console.log(JSON.stringify(result.rows) + 'Rows');
-    if (result.rows.length > 0) {
-      console.log(result.rows.length);
-      response.json(result.rows);
-    } else {
-      response.status(401).json({ message: 'Ogiltiga inloggningsuppgifter.' });
-    }
+    const query = 'DELETE FROM activities WHERE activity_id = $1';
+    const values = [activity_id];
+    await pool.query(query, values);
+
+    response.status(200).json({ message: 'Objektet har tagits bort' });
   } catch (error) {
-    console.error('Fel vid anslutning:', error);
-    response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
+    console.error('Fel vid borttagning av objektet:', error);
+    response
+      .status(500)
+      .json({ message: 'Ett fel uppstod vid borttagning av objektet' });
   }
 });
-app.post('/create', async (request, response) => {
-  const { userName, email, password, phoneNumber } = request.body;
-  console.log(userName);
-  try {
-    const query =
-      'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
-    const values = [userName, email, password, phoneNumber];
 
-    console.log(userName + '53 ');
+const subscriptions: { [key: string]: any } = {};
+console.log(subscriptions);
 
-    await pool
-      .query(query, values)
-      .then(() => {
-        response.status(201).send('Konto skapat!');
+app.get('/subscription/:id', (request: Request, response: Response) => {
+  console.log('helo');
+  console.log(request.body);
+  sendPushNotification(request.body, response);
+});
+
+app.post('/subscription', (request: Request, response: Response) => {
+  handlePushNotificationSubscription(request, response);
+});
+
+function createHash(input: string) {
+  const md5sum = crypto.createHash('md5');
+  md5sum.update(Buffer.from(input));
+  return md5sum.digest('hex');
+}
+
+function handlePushNotificationSubscription(req: Request, res: Response) {
+  const subscriptionRequest = req.body;
+  console.log('Hello');
+  console.log(subscriptionRequest);
+  const susbscriptionId = createHash(JSON.stringify(subscriptionRequest));
+  console.log('Hejsan3');
+  subscriptions[susbscriptionId] = subscriptionRequest;
+  console.log(subscriptions);
+  res.status(201).json({ id: susbscriptionId });
+}
+
+function sendPushNotification(req: Request, res: Response) {
+  const subscriptionId = req.params.id;
+  console.log(subscriptionId);
+  const pushSubscription = subscriptions[subscriptionId];
+  console.log(pushSubscription);
+  console.log(subscriptions);
+
+  webpush
+    .sendNotification(
+      pushSubscription,
+      JSON.stringify({
+        title: 'Push Notification',
+        text: 'This is a push notification',
       })
-      .catch((error: Error) => {
-        console.error('Fel vid skapande av konto:', error);
-        response.status(500).send('Ett fel uppstod vid skapandet av kontot.');
-      });
-  } catch (error) {
-    console.error('Fel vid anslutning:', error);
-    response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
-  }
-});
+    )
+    .catch((error: string) => {
+      console.log(error);
+    });
+}
 
-// });
+app.use(express.static(path.join(path.resolve(), '../public')));
 app.listen(8080, () => {
   console.log('Webbtjänsten kan nu ta emot anrop.');
 });
-
-// Christoffers kod för att uppdatera aktivitet, fungerar inte än
-
-// app.patch('/update', async (request, response) => {
-//   const { activity_id, title, description, date } = request.body;
-//   console.log(activity_id, title, description, date);
-//   const user = 'SELECT * FROM users WHERE user_id = $1'
-
-//   try {
-//     const query =
-//       'UPDATE activities SET title = $1, description = $2, due_date = $3 WHERE activity_id = $4';
-//     const values = [title, description, date, activity_id];
-
-//     await pool
-//       .query(query, values)
-//       .then(() => {
-//         response.status(201).send('Aktivitet Uppdaterad!');
-//       })
-//       .catch((error: Error) => {
-//         console.error('Fel vid skapande av konto:', error);
-//         response
-//           .status(500)
-//           .send('Ett fel uppstod vid uppdatering av aktiviteten.');
-//       });
-//   } catch (error) {
-//     console.error('Fel vid anslutning:', error);
-//     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
-//   }
-// });
 
 // CREATE TABLE users (
 //   user_id SERIAL PRIMARY KEY,

@@ -4,7 +4,6 @@ import calender from '../images/calenderWhite.svg';
 import home from '../images/home.svg';
 import logOut from '../images/logOut.svg';
 import account from '../images/account.svg';
-import settings from '../images/settings.svg';
 const BurgerMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,7 +32,7 @@ const BurgerMenu: React.FC = () => {
             <li>
               <a
                 href="#/Calenderpage"
-                className=" my-auto mb-2 ml-[10px] flex flex h-11 items-center items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary pr-20 text-white transition-all hover:translate-x-3"
+                className=" my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary pr-20 text-white transition-all hover:translate-x-3"
               >
                 <img
                   src={calender}
@@ -58,19 +57,6 @@ const BurgerMenu: React.FC = () => {
             </li>
             <li>
               <a
-                // href="#"
-                className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
-              >
-                <img
-                  src={settings}
-                  className="my-auto ml-[10px] inline-block h-5 w-5"
-                  alt=""
-                />
-                <span className="ml-2">Settings</span>
-              </a>
-            </li>
-            <li>
-              <a
                 href="#/HomePage"
                 className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
               >
@@ -84,7 +70,7 @@ const BurgerMenu: React.FC = () => {
             </li>
             <li>
               <a
-                href="#/landing"
+                href="#/signIn"
                 onClick={() => localStorage.removeItem('user_id')}
                 className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
               >

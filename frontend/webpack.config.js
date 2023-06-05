@@ -1,8 +1,10 @@
 const { GenerateSW } = require('workbox-webpack-plugin');
-const path = require('path');
 
 module.exports = {
   // ...
+  experiments: {
+    topLevelAwait: true,
+  },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
@@ -23,5 +25,4 @@ module.exports = {
       skipWaiting: true,
     }),
   ],
-  // ...
 };
