@@ -2,6 +2,11 @@ import React from 'react';
 import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import signUpNinja from '../images/signUp.svg';
+import linkedin from '../images/linkedIn.svg';
+import facebook from '../images/facebook.svg';
+import twitter from '../images/twitter.svg';
+import ninja from '../images/ninjaDash.svg';
+import instagram from '../images/instagram.svg';
 
 function useRedirect() {
   const navigate = useNavigate();
@@ -200,10 +205,10 @@ function App() {
         </div>
       </div>
       <div className="mx-auto w-[80%]">
-        <div className="absolute bottom-0  mx-auto w-[80%]  text-center">
-          <footer className="grid grid-cols-3">
+        <div className=" w-full">
+          <footer className=" grid grid-cols-3">
             <div className="flex items-center  gap-2">
-              {/* <img src={ninja} alt="" /> */}
+              <img src={ninja} alt="" />
               <p className="bg-gradient-to-b from-linear1 to-linear2 bg-clip-text font-header text-3xl text-transparent ">
                 Ninja Taskmaster
               </p>
@@ -223,10 +228,10 @@ function App() {
             <div className="contact mt-8 flex flex-col gap-2">
               Join Our Social Community
               <div className="mt-2 flex gap-5">
-                {/* <img src={linkedin} alt="" />
-              <img src={facebook} alt="" />
-              <img src={instagram} alt="" />
-              <img src={twitter} alt="" /> */}
+                <img src={linkedin} alt="" />
+                <img src={facebook} alt="" />
+                <img src={instagram} alt="" />
+                <img src={twitter} alt="" />
               </div>
             </div>
           </footer>
