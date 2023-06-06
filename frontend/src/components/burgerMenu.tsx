@@ -84,7 +84,7 @@ const BurgerMenu: React.FC = () => {
             </li>
             <li>
               <a
-                href="#/landing"
+                href="#/signIn"
                 onClick={() => localStorage.removeItem('user_id')}
                 className="my-auto mb-2 ml-[10px] flex h-11 items-center rounded-l-[25px] border-[2px] border-r-0 border-white bg-secondary  text-white transition-all hover:translate-x-3"
               >

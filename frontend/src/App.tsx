@@ -9,7 +9,6 @@ import Account from './pages/MyAccount';
 import UpdateTask from './pages/updateTask';
 import CalenderPage from './pages/Calenderpage';
 
-
 // createBrowserRouter
 import { createHashRouter, Outlet, RouterProvider } from 'react-router-dom';
 
