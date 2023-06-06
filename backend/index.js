@@ -360,22 +360,6 @@ app.post('/tasks', (req, res) =>
   })
 );
 
-// Get all tasks
-app.get('/tasks', (_, res) =>
-  __awaiter(void 0, void 0, void 0, function* () {
-    try {
-      const getAllTasksQuery = 'SELECT * FROM tasks';
-      const result = yield pool.query(getAllTasksQuery);
-      res.status(200).json(result.rows);
-    } catch (error) {
-      console.error(
-        'Ett fel uppstod vid försök att hämta alla aktiviteter:',
-        error
-      );
-      res.status(500).json({ message: 'Fel vid anslutning' });
-    }
-  })
-);
 // Get a single task by ID
 app.get('/tasks/:id', (req, res) =>
   __awaiter(void 0, void 0, void 0, function* () {
@@ -402,9 +386,6 @@ app.get('/tasks/:id', (req, res) =>
   })
 );
 // Update a task by ID
-
-// PUTS
-
 app.put('/tasks/:id', (req, res) =>
   __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -467,35 +448,6 @@ app.delete('/delete/:id', (request, response) =>
     }
   })
 );
-app.post('/create', (request, response) =>
-  __awaiter(void 0, void 0, void 0, function* () {
-    const { userName, email, password, phoneNumber } = request.body;
-    console.log(userName);
-    try {
-      const query =
-        'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
-      const values = [userName, email, password, phoneNumber];
-      console.log(userName + '53 ');
-      yield pool
-        .query(query, values)
-        .then(() => {
-          response.status(201).send('Konto skapat!');
-        })
-        .catch((error) => {
-          console.error('Fel vid skapande av konto:', error);
-          response.status(500).send('Ett fel uppstod vid skapandet av kontot.');
-        });
-    } catch (error) {
-      console.error('Fel vid anslutning:', error);
-      response
-        .status(500)
-        .send('Ett fel uppstod vid anslutning till databasen.');
-    }
-  })
-);
-app.listen(8080, () => {
-  console.log('Webbtjänsten kan nu ta emot anrop.');
-});
 const subscriptions = {};
 console.log(subscriptions);
 app.get('/subscription/:id', (request, response) => {
@@ -558,3 +510,33 @@ app.listen(8080, () => {
 // completed BOOLEAN DEFAULT FALSE,
 // repeat BOOLEAN DEFAULT FALSE,
 // FOREIGN KEY (user_id) REFERENCES users (user_id)
+// );
+app.post('/create', (request, response) =>
+  __awaiter(void 0, void 0, void 0, function* () {
+    const { userName, email, password, phoneNumber } = request.body;
+    console.log(userName);
+    try {
+      const query =
+        'INSERT INTO users (username, email, password, phonenumber) VALUES ($1, $2, $3, $4)';
+      const values = [userName, email, password, phoneNumber];
+      console.log(userName + '53 ');
+      yield pool
+        .query(query, values)
+        .then(() => {
+          response.status(201).send('Konto skapat!');
+        })
+        .catch((error) => {
+          console.error('Fel vid skapande av konto:', error);
+          response.status(500).send('Ett fel uppstod vid skapandet av kontot.');
+        });
+    } catch (error) {
+      console.error('Fel vid anslutning:', error);
+      response
+        .status(500)
+        .send('Ett fel uppstod vid anslutning till databasen.');
+    }
+  })
+);
+app.listen(8080, () => {
+  console.log('Webbtjänsten kan nu ta emot anrop.');
+});
