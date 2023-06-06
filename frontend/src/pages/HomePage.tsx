@@ -18,9 +18,7 @@ function HomePage() {
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
   const [data, setData] = useState<Activity[]>([]);
   const [username, setUsername] = useState('');
-  const [dateToShow, setDateToShow] = useState(
-    new Date().toLocaleDateString('sv-SE')
-  );
+  const [dateToShow] = useState(new Date().toLocaleDateString('sv-SE'));
 
   const handleDelete = () => {
     console.log(selectedTasks);
@@ -87,8 +85,7 @@ function HomePage() {
   };
 
   const filteredTasks = data.filter(
-    (item) =>
-      dateToShow === new Date(item.due_date).toLocaleDateString('sv-SE')
+    (item) => dateToShow === new Date(item.due_date).toLocaleDateString('sv-SE')
   );
 
   const sortedTasks = filteredTasks.sort(
@@ -146,9 +143,7 @@ function HomePage() {
               <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
                 <input
                   value={item.activity_id}
-                  onChange={(e) =>
-                    handleTaskSelection(Number(e.target.value))
-                  }
+                  onChange={(e) => handleTaskSelection(Number(e.target.value))}
                   type="checkbox"
                   checked={selectedTasks.includes(item.activity_id)}
                   className="checkbox absolute h-full w-full cursor-pointer appearance-none rounded-full border checked:border-none focus:outline-none"
@@ -167,9 +162,7 @@ function HomePage() {
                       minute: '2-digit',
                     })}
                   </p>
-                  <p className="font-inter text-xl font-light">
-                    {item.title}
-                  </p>
+                  <p className="font-inter text-xl font-light">{item.title}</p>
                 </React.Fragment>
                 <div>
                   <div

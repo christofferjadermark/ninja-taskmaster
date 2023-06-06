@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../index.css';
 import closeSvg from '../images/close.svg';
-import { on } from 'events';
 function useRedirect() {
   const navigate = useNavigate();
   const redirectToHome = () => {
@@ -27,7 +26,6 @@ const App: React.FC<MyComponentProps> = ({
   const [endDate, setEndDate] = useState('');
   const [endReoccurance, setEndReoccurance] = useState('1');
   const [option, setOption] = useState('');
-  const [date, setDate] = useState([]);
   const handleOptionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setRepeatType(event.target.value);
   };
@@ -67,7 +65,7 @@ const App: React.FC<MyComponentProps> = ({
       />
       <div className="flex h-[60px] bg-gradient-to-b from-linear1  to-linear2">
         <div className="my-auto ml-[33px] w-full border-none bg-transparent text-[30px] text-white ">
-          My Account
+          Custom Reocurrence
         </div>
       </div>
       <div className="ml-[33px] mt-[34px]">
@@ -89,8 +87,6 @@ const App: React.FC<MyComponentProps> = ({
           Ends
         </div>
         <div className="">
-          {/* {options.map((option) => ( */}
-          {/* <label className="mt-2 "> */}
           <div className="mt-[10px] flex items-center">
             <input
               type="radio"

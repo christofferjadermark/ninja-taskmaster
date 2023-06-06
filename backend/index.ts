@@ -20,6 +20,8 @@ webpush.setVapidDetails(
   keys.privateKey
 );
 
+import { time } from 'console';
+
 dotenv.config();
 
 const app = express();
@@ -312,6 +314,33 @@ app.post('/tasks', async (req, res) => {
 
 // PUTS
 
+// Get a single task by ID
+app.get('/tasks/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const getTaskByIdQuery = 'SELECT * FROM activities WHERE activity_id = $1';
+    const result = await pool.query(getTaskByIdQuery, [id]);
+
+    if (result.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ message: 'Ett fel uppstod vid letandet för din aktivitet' });
+    }
+    result.rows[0].due_date.setHours(result.rows[0].due_date.getHours() + 0);
+    console.log(result.rows[0].due_date);
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error(
+      'Ett fel uppstod vid försök av att hitta din aktivitet:',
+      error
+    );
+    res.status(500).json({ message: 'Fel vid anslutning' });
+  }
+});
+
+// Update a task by ID
+
 app.put('/tasks/:id', async (req, res) => {
   const { id } = req.params;
   const { user_id, title, description, date, category, allDay, priority } =
@@ -446,3 +475,7 @@ app.listen(8080, () => {
 // repeat BOOLEAN DEFAULT FALSE,
 // FOREIGN KEY (user_id) REFERENCES users (user_id)
 // );
+
+app.listen(8080, () => {
+  console.log('Webbtjänsten kan nu ta emot anrop.');
+});

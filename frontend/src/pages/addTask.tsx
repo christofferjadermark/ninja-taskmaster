@@ -13,7 +13,6 @@ import DatePicker from 'react-datepicker';
 import CustomReocurrence from '../components/customReocurrence';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/CalenderDot.css';
-// import { setPriority } from 'os';
 
 function App() {
   const [openRepeat, setOpenRepeat] = useState(false);
@@ -46,7 +45,6 @@ function App() {
   };
   const [selectedDate, setSelectedDate] = useState(new Date());
   const handleDateChange = (date: Date) => {
-    // setSelectedDate(date);
     let updatedDate = new Date(date);
     updatedDate.setHours(Number(hour));
     updatedDate.setMinutes(Number(minute));
@@ -70,10 +68,10 @@ function App() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      // Convert selectedDate to GMT+2 timezone
       const selectedDateGMT = new Date(selectedDate);
-      selectedDateGMT.setUTCHours(selectedDateGMT.getUTCHours() + 2);
-    
+      console.log(selectedDateGMT);
+      selectedDateGMT.setUTCHours(selectedDateGMT.getUTCHours());
+      console.log(selectedDateGMT);
       if (endDate.includes('-')) {
         let date = new Date(endDate);
         let firstDate = new Date(selectedDateGMT);
@@ -85,8 +83,7 @@ function App() {
         } else if (repeatType === 'Month') {
           addIndex = 30;
         }
-        const today = new Date();
-        const newDate = new Date(firstDate.getTime()); // Create a copy of the selected date
+        const newDate = new Date(firstDate.getTime());
         for (let i = 0; newDate < date; i++) {
           const response = await fetch('http://localhost:8080/add', {
             method: 'POST',
@@ -122,9 +119,8 @@ function App() {
         } else if (repeatType === 'Month') {
           addIndex = 30;
         }
-        const today = new Date();
-  
-        const newDate = new Date(firstDate.getTime()); // Create a copy of the selected date
+
+        const newDate = new Date(firstDate.getTime());
         for (let i = 0; i < Number(endDate); i++) {
           const response = await fetch('http://localhost:8080/add', {
             method: 'POST',
@@ -157,11 +153,9 @@ function App() {
       console.log('Error');
     }
   };
-  
-  
-  
+
   const handleHourChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.slice(0, 2); // Begränsa till 2 tecken
+    const value = event.target.value.slice(0, 2);
 
     if (/^\d{0,2}$/.test(value)) {
       const parsedValue = parseInt(value, 10);
@@ -175,7 +169,7 @@ function App() {
     }
   };
   const handleMinuteChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.slice(0, 2); // Begränsa till 2 tecken
+    const value = event.target.value.slice(0, 2);
 
     if (/^\d{0,2}$/.test(value)) {
       const parsedValue = parseInt(value, 10);
@@ -188,7 +182,6 @@ function App() {
       setSelectedDate(date);
     }
   };
-  // const handleDateChangeProp
   const handleDateChangeProp = (value: string) => {
     setEndDate(value);
   };
@@ -196,7 +189,7 @@ function App() {
     <div>
       <div
         className={`fixed top-0 z-50 h-full w-full bg-white text-center transition-all ${
-          openRepeat ? ' ' : 'translate-y-[-1000px]'
+          openRepeat ? ' ' : 'translate-y-[-1500px]'
         }`}
       >
         {openRepeat && (
@@ -263,7 +256,7 @@ function App() {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Write hear..."
+            placeholder="Write here..."
             className=" ml-[33px] mt-[20px] h-[180px] w-[80%] resize-none rounded-[25px] border-[1px] border-secondary px-2 py-1 pl-[33px] text-gray-800 placeholder:text-[16px] focus:outline-none"
           ></textarea>
         </div>
@@ -364,10 +357,9 @@ function App() {
         <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
         <div
           onClick={(e) => {
-            e.stopPropagation(); // Stoppar händelsepropagering här
+            e.stopPropagation();
             setPriority(!priority);
           }}
-          // className="ml-[33px] mt-[20px] flex w-[170px] items-center rounded-[25px] border-[1px] border-secondary px-4 py-2 "
           className={`${
             priority ? 'bg-secondary' : 'bg-transparent'
           } ml-[33px] mt-[20px] flex w-[170px] cursor-pointer items-center rounded-[25px] border-[1px] border-secondary px-4 py-2`}

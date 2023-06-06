@@ -14,11 +14,8 @@ function useRedirect() {
 
 function App() {
   const redirectToHome = useRedirect();
-  const [userName, setUserName] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
     if (localStorage.getItem('user_id')) {

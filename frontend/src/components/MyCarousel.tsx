@@ -72,27 +72,29 @@ function MyCarousel() {
       </Carousel>
       <div className="mt-10">
         <ThemeProvider theme={theme}>
-          <Radio
-            checked={currentSlide === 0}
-            onChange={() => handleRadioChange(0)}
-            color="primary"
-            size="small"
-            name="radio-button"
-          />
-          <Radio
-            checked={currentSlide === 1}
-            onChange={() => handleRadioChange(1)}
-            color="primary"
-            size="small"
-            name="radio-button"
-          />
-          <Radio
-            checked={currentSlide === 2}
-            onChange={() => handleRadioChange(2)}
-            color="primary"
-            size="small"
-            name="radio-button"
-          />
+          <div className="text-center">
+            <Radio
+              checked={currentSlide === 0}
+              onChange={() => handleRadioChange(0)}
+              color="primary"
+              size="small"
+              name="radio-button"
+            />
+            <Radio
+              checked={currentSlide === 1}
+              onChange={() => handleRadioChange(1)}
+              color="primary"
+              size="small"
+              name="radio-button"
+            />
+            <Radio
+              checked={currentSlide === 2}
+              onChange={() => handleRadioChange(2)}
+              color="primary"
+              size="small"
+              name="radio-button"
+            />
+          </div>
         </ThemeProvider>
       </div>
     </>

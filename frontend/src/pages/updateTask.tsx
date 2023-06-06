@@ -32,7 +32,6 @@ function App() {
   );
   const [allDay, setAllDay] = useState(false);
   console.log(allDay);
-  const [data, setData] = useState('');
   const handleToggle = () => {
     setAllDay(!allDay);
     console.log(allDay);
@@ -41,7 +40,6 @@ function App() {
   console.log(activity_id + 'dsa');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const handleDateChange = (date: Date) => {
-    // setSelectedDate(date);
     let updatedDate = new Date(date);
     updatedDate.setHours(Number(hour));
     updatedDate.setMinutes(Number(minute));
@@ -52,7 +50,6 @@ function App() {
       fetch('http://localhost:8080/tasks/' + activity_id)
         .then((response) => response.json())
         .then((result) => {
-          setData(result);
           setHour(JSON.stringify(new Date(result.due_date).getHours()));
           setMinute(JSON.stringify(new Date(result.due_date).getMinutes()));
           setTitle(result.title);
@@ -66,7 +63,7 @@ function App() {
     } catch (error) {
       console.log('fel');
     }
-  }, []);
+  }, [activity_id]);
   useEffect(() => {
     setCategoryStyle(
       'h-[25px] w-[25px] rounded-full border-[2px] border-black bg-[' +
@@ -84,6 +81,7 @@ function App() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(selectedDate);
     try {
       const response = await fetch(
         'http://localhost:8080/tasks/' + activity_id,
@@ -115,7 +113,7 @@ function App() {
     }
   };
   const handleHourChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.slice(0, 2); // Begränsa till 2 tecken
+    const value = event.target.value.slice(0, 2);
 
     if (/^\d{0,2}$/.test(value)) {
       const parsedValue = parseInt(value, 10);
@@ -130,7 +128,7 @@ function App() {
     }
   };
   const handleMinuteChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value.slice(0, 2); // Begränsa till 2 tecken
+    const value = event.target.value.slice(0, 2);
 
     if (/^\d{0,2}$/.test(value)) {
       const parsedValue = parseInt(value, 10);
@@ -300,10 +298,9 @@ function App() {
         <div className="ml-[33px] mt-[20px] w-[80%] border-[1px] border-gray-300"></div>
         <div
           onClick={(e) => {
-            e.stopPropagation(); // Stoppar händelsepropagering här
+            e.stopPropagation();
             setPriority(!priority);
           }}
-          // className="ml-[33px] mt-[20px] flex w-[170px] items-center rounded-[25px] border-[1px] border-secondary px-4 py-2 "
           className={`${
             priority ? 'bg-secondary' : 'bg-transparent'
           } ml-[33px] mt-[20px] flex w-[170px] cursor-pointer items-center rounded-[25px] border-[1px] border-secondary px-4 py-2`}
@@ -321,7 +318,7 @@ function App() {
           </div>
           <div
             className={`fixed left-0 right-0 top-[35%] z-30 mx-auto my-auto w-[70%] rounded-[25px]  bg-white p-[10px] text-center transition-all ${
-              deletePopup ? ' ' : 'translate-y-[-600px]'
+              deletePopup ? ' ' : 'translate-y-[-1000px]'
             }`}
           >
             <img
