@@ -475,7 +475,3 @@ app.listen(8080, () => {
 // repeat BOOLEAN DEFAULT FALSE,
 // FOREIGN KEY (user_id) REFERENCES users (user_id)
 // );
-
-app.listen(8080, () => {
-  console.log('Webbtjänsten kan nu ta emot anrop.');
-});
