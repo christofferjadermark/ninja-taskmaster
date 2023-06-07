@@ -406,7 +406,7 @@ function sendPushNotification(req: Request, res: Response) {
     });
 }
 
-app.use(express.static(path.join(path.resolve(), '../public')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.listen(8080, () => {
   console.log('Webbtjänsten kan nu ta emot anrop.');
 });
