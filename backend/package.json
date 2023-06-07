@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build frontend": "npm run --prefix ../frontend build && rm -Rf ./public && mv ../frontend/build public",
+    "build-frontend": "npm run --prefix ../frontend build && rm -Rf ./public && mv ../frontend/build public",
     "build": "npx tsc",
     "dev": "concurrently \"nodemon index.js\" \"npx tsc --watch\"",
     "start": "node index.js",
