@@ -210,54 +210,7 @@ app.post('/create', async (request, response) => {
     response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
   }
 });
-app.post('/add', async (request, response) => {
-  const {
-    user_id,
-    title,
-    description,
-    date,
-    category,
-    allDay,
-    priority,
-    repeatType,
-  } = request.body;
-  console.log(
-    user_id,
-    title,
-    description,
-    date,
-    category,
-    allDay,
-    priority,
-    repeatType
-  );
-  try {
-    const query =
-      'INSERT INTO activities (user_id, title, description, due_date, completed, repeat, category, all_day, priority) VALUES ($1, $2, $3, $4, false, false, $5, $6, $7)';
-    const values = [
-      user_id,
-      title,
-      description,
-      date,
-      category,
-      allDay,
-      priority,
-    ];
 
-    await pool
-      .query(query, values)
-      .then(() => {
-        response.status(201).send('Aktivitet Tillagd!');
-      })
-      .catch((error: Error) => {
-        console.error('Fel vid skapande av konto:', error);
-        response.status(500).send('Ett fel uppstod vid skapandet av kontot.');
-      });
-  } catch (error) {
-    console.error('Fel vid anslutning:', error);
-    response.status(500).send('Ett fel uppstod vid anslutning till databasen.');
-  }
-});
 app.post('/add', async (request, response) => {
   const { user_id, title, description, date, category, allDay, priority } =
     request.body;

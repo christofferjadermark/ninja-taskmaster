@@ -95,8 +95,8 @@ function HomePage() {
   return (
     <div>
       <Header />
-      <div className="flex flex-col">
-        <h1 className="ml-[32.5px] mt-[24px] font-inter text-5xl">
+      <div className="mx-auto flex w-[80%] flex-col ">
+        <h1 className=" mt-[24px] font-inter text-5xl">
           Hello, <br />
           {username}
         </h1>
@@ -134,12 +134,10 @@ function HomePage() {
         </div>
       </div>
 
-      {/* TASKS START */}
       <div className="mt-4 flex w-screen flex-col items-center gap-4">
         {sortedTasks.map((item, index) => (
           <div key={index} className="flex items-center">
             <div className="flex items-center justify-center">
-              {/* RADIO BUTTONS START */}
               <div className="relative mr-4 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-white dark:bg-gray-100">
                 <input
                   value={item.activity_id}
@@ -150,7 +148,6 @@ function HomePage() {
                 />
                 <div className="check-icon z-1 hidden h-full w-full rounded-full border-4" />
               </div>
-              {/* RADIO BUTTONS END */}
               <Link
                 to={'/updateTask/' + item.activity_id}
                 className="flex h-[55px] w-[290px] items-center justify-around rounded-3xl border-2 border-secondary bg-white"
@@ -174,7 +171,6 @@ function HomePage() {
           </div>
         ))}
       </div>
-      {/* TASKS END */}
     </div>
   );
 }
