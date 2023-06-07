@@ -70,7 +70,7 @@ function App() {
       return;
     } else {
       try {
-        const response = await fetch('http://localhost:8080/create', {
+        const response = await fetch('/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

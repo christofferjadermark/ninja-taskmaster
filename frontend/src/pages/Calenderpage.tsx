@@ -36,7 +36,7 @@ function CalenderPage() {
     const task = data.find((item) => item.activity_id === taskId);
     if (task) {
       const updatedTask = { ...task, is_completed: !task.is_completed };
-      fetch('http://localhost:8080/update/' + taskId, {
+      fetch('/update/' + taskId, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ function CalenderPage() {
     if (selectedTask.length > 0) {
       Promise.all(
         selectedTask.map((taskId) =>
-          fetch('http://localhost:8080/delete/' + taskId, {
+          fetch('/delete/' + taskId, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ function CalenderPage() {
     const storedUser = localStorage.getItem('user_id');
     console.log(storedUser);
     if (storedUser) {
-      fetch('http://localhost:8080/' + storedUser, {
+      fetch('/' + storedUser, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ function CalenderPage() {
 
         Promise.all(
           updatedTasks.map((task) =>
-            fetch('http://localhost:8080/update/' + task.activity_id, {
+            fetch('/update/' + task.activity_id, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',

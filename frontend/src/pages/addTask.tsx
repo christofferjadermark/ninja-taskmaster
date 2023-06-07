@@ -85,7 +85,7 @@ function App() {
         }
         const newDate = new Date(firstDate.getTime());
         for (let i = 0; newDate < date; i++) {
-          const response = await fetch('http://localhost:8080/add', {
+          const response = await fetch('/add', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ function App() {
 
         const newDate = new Date(firstDate.getTime());
         for (let i = 0; i < Number(endDate); i++) {
-          const response = await fetch('http://localhost:8080/add', {
+          const response = await fetch('/add', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

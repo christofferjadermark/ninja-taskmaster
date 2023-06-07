@@ -42,7 +42,7 @@ function App() {
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const handleSubmit = () => {
     try {
-      const response = fetch('http://localhost:8080/changeAccount', {
+      const response = fetch('/changeAccount', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ function App() {
     const storedUser = localStorage.getItem('user_id');
     console.log(storedUser);
     if (storedUser) {
-      fetch('http://localhost:8080/' + storedUser, {
+      fetch('/' + storedUser, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

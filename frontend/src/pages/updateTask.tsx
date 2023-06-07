@@ -47,7 +47,7 @@ function App() {
   };
   useEffect(() => {
     try {
-      fetch('http://localhost:8080/tasks/' + activity_id)
+      fetch('/tasks/' + activity_id)
         .then((response) => response.json())
         .then((result) => {
           setHour(JSON.stringify(new Date(result.due_date).getHours()));
@@ -83,24 +83,21 @@ function App() {
     e.preventDefault();
     console.log(selectedDate);
     try {
-      const response = await fetch(
-        'http://localhost:8080/tasks/' + activity_id,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user_id: localStorage.getItem('user_id'),
-            title: title,
-            description: description,
-            date: selectedDate,
-            category: category,
-            allDay: allDay,
-            priority: priority,
-          }),
-        }
-      );
+      const response = await fetch('/tasks/' + activity_id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: localStorage.getItem('user_id'),
+          title: title,
+          description: description,
+          date: selectedDate,
+          category: category,
+          allDay: allDay,
+          priority: priority,
+        }),
+      });
       console.log(response);
       if (response.ok) {
         console.log('Uppdaterad');
@@ -328,7 +325,7 @@ function App() {
                     className="ml-[20px] mt-[20px] cursor-pointer rounded-[12px] border-2 border-none bg-secondary px-[33px] py-[4px] text-[17.6px] text-white"
                     value="Yes"
                     onClick={() => {
-                      fetch('http://localhost:8080/delete/' + activity_id, {
+                      fetch('/delete/' + activity_id, {
                         method: 'DELETE',
                         headers: {
                           'Content-Type': 'application/json',

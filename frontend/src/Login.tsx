@@ -1,8 +1,8 @@
-import React from "react";
-import { useState, FormEvent, useEffect } from "react";
+import React from 'react';
+import { useState, FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "./App.css";
-import "./index.css";
+import './App.css';
+import './index.css';
 
 function useRedirect() {
   const navigate = useNavigate();
@@ -14,21 +14,21 @@ function useRedirect() {
 
 function App() {
   const redirectToHome = useRedirect();
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [logInEmail, setLogInEmail] = useState("");
-  const [logInPassword, setLogInPassword] = useState("");
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [logInEmail, setLogInEmail] = useState('');
+  const [logInPassword, setLogInPassword] = useState('');
   useEffect(() => {
-    if(localStorage.getItem("user_id")){
-      redirectToHome()
+    if (localStorage.getItem('user_id')) {
+      redirectToHome();
     }
-  } )
+  });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/login', {
+      const response = await fetch('/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,22 +38,25 @@ function App() {
           password: logInPassword,
         }),
       });
-      console.log(response)
+      console.log(response);
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         const { user_id } = data[0];
         localStorage.setItem('user_id', user_id);
         redirectToHome();
       } else {
-        console.log("fel inloggnings uppgifter")
+        console.log('fel inloggnings uppgifter');
       }
     } catch (error) {
-      console.log("fel")
+      console.log('fel');
       // Handle ne twork or server error
     }
   };
-  if (localStorage.getItem("isLogedIn") && localStorage.getItem("isLogedIn") === "true"){
+  if (
+    localStorage.getItem('isLogedIn') &&
+    localStorage.getItem('isLogedIn') === 'true'
+  ) {
     redirectToHome();
   }
 
@@ -62,13 +65,13 @@ function App() {
       <h1>Logga in</h1>
       <form
         className="md:container sm:mx-auto"
-        // action="http://localhost:8080/login"
+        // action="/login"
         // method="post"
         onSubmit={handleSubmit}
       >
         <label>
           <input
-            className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+            className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
             name="email"
             placeholder="E-postadress"
             value={logInEmail}
@@ -81,13 +84,13 @@ function App() {
             placeholder="Lösenord"
             type="password"
             value={logInPassword}
-            className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+            className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
             onChange={(e) => setLogInPassword(e.target.value)}
           />
         </label>
         <input
           type="submit"
-          className="btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 cursor-pointer"
+          className="btn cursor-pointer rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
           value="Skicka"
         />
       </form>
@@ -95,7 +98,7 @@ function App() {
       <h1>Skapa konto</h1>
       <form
         className="md:container sm:mx-auto"
-        action="http://localhost:8080/create"
+        action="/create"
         method="POST"
         // onSubmit={handleSubmit}
       >
@@ -104,13 +107,13 @@ function App() {
             name="userName"
             placeholder="Username"
             value={userName}
-            className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+            className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
             onChange={(e) => setUserName(e.target.value)}
           />
         </label>
         <label>
           <input
-            className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+            className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
             name="email"
             placeholder="E-postadress"
             value={email}
@@ -124,13 +127,13 @@ function App() {
             placeholder="Lösenord"
             type="password"
             value={password}
-            className="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+            className="block w-full rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 shadow-sm placeholder:italic placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm"
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
         <input
           type="submit"
-          className="btn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 cursor-pointer"
+          className="btn cursor-pointer rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
           value="Skicka"
         />
       </form>

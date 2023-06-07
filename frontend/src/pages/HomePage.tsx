@@ -24,7 +24,7 @@ function HomePage() {
     console.log(selectedTasks);
     if (selectedTasks.length > 0) {
       const deletePromises = selectedTasks.map((taskId) =>
-        fetch(`http://localhost:8080/delete/${taskId}`, {
+        fetch(`/delete/${taskId}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ function HomePage() {
     const storedUser = localStorage.getItem('user_id');
     console.log(storedUser);
     if (storedUser) {
-      fetch(`http://localhost:8080/${storedUser}`, {
+      fetch(`/${storedUser}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

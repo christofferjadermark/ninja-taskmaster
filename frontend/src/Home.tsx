@@ -9,7 +9,7 @@ function App() {
   const [date, setDate] = useState('');
   useEffect(() => {
     if (localStorage.getItem('user_id')) {
-      fetch('http://localhost:8080/' + localStorage.getItem('user_id'))
+      fetch('/' + localStorage.getItem('user_id'))
         .then((response) => response.json())
         .then((result) => {
           setData(result);
@@ -21,7 +21,7 @@ function App() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/add', {
+      const response = await fetch('/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ function App() {
     }
   };
   const handleDelete = (activity: number) => {
-    fetch('http://localhost:8080/delete/' + activity, {
+    fetch('/delete/' + activity, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
